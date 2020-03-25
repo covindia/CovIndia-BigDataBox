@@ -18,6 +18,9 @@ def states_affected_numbers(data):
 	"""
 		The API function for states-affected-numbers. Saves output to DIR_DATA / APIData / states-affected-numbers.json
 	"""
+	print ("WARNING: States_Affected_Numbers is deprecated and no longer supported!")
+	print ("Instead, use: daily.daily_states")
+
 	DATA_states_affected_number = {}
 	for row in data:
 		try:
@@ -37,7 +40,8 @@ def states_affected_numbers(data):
 				else:
 					DATA_states_affected_number[state] = int(row[4])
 
-	with open(DIR_DATA + "APIData/states_affected_numbers.json", 'w') as FPtr:
-		dump(DATA_states_affected_number, FPtr)
+	# UNCOMMENT THIS IF YOU WANT TO STILL USE A DEPRECATED FUNCTION, GODDAMNIT
+	# with open(DIR_DATA + "APIData/states_affected_numbers.json", 'w') as FPtr:
+	# 	dump(DATA_states_affected_number, FPtr)
 
 	return 1
