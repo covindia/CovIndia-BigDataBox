@@ -32,7 +32,10 @@ def latest_updates_V2(data, number_of_latest_updates):
 			break
 
 		# No source -_-, get the source scrapbois. Goddamnit.
-		if entry[6] == '' or entry[6] == " ":
+		try:
+			if entry[6] == '' or entry[6] == " ":
+				continue
+		except:
 			continue
 
 		state = str(entry[2])
