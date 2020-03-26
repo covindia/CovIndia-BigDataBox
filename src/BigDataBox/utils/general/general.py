@@ -139,8 +139,8 @@ def general(data):
 
 	df = read_html(mohfwURL)
 
-	TotalCured = df[1].iloc[-1].values[3] # CURED/DISCHARGED
-	TotalDeath = df[1].iloc[-1].values[4] # DEATH
+	TotalCured = df[7].iloc[-2].values[3] # CURED/DISCHARGED
+	TotalDeath = df[7].iloc[-2].values[4] # DEATH
 
 	for districtBoi in globalData:
 		globalData[districtBoi]["value"] = globalData[districtBoi]["infected"] / infectedMax

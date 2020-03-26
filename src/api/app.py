@@ -1,5 +1,5 @@
 import flask
-from flask import jsonify
+from flask import jsonify, request
 from json import load, dump
 import os
 
@@ -11,13 +11,6 @@ app = flask.Flask(__name__)
 @app.route('/', methods=['GET'])
 def home():
 	return "<a href=\"https://covindia.com\">Click here to go to https://covindia.com</a>. You were not supposed to stumble here.<br><br>But now that you did, hello from us!"
-
-@app.route('/states-affected-numbers', methods=['GET'])
-def states_affected_numbers():
-	statesJSON = {}
-	with open(DIR_DATA + "/APIData/states_affected_numbers.json", 'r') as FPtr:
-		statesJSON = load(FPtr)
-	return jsonify(statesJSON)
 
 @app.route('/daily-dates', methods=['GET'])
 def daily_dates():
@@ -46,6 +39,28 @@ def district_values():
 	with open(DIR_DATA + "/APIData/district_values.json", 'r') as FPtr:
 		districtValuesJSON = load(FPtr)
 	return jsonify(districtValuesJSON)
+
+@app.route('/report-an-error', methods=['GET', 'POST'])
+def report_an_error():
+	if request.method == 'POST':
+		state = request.form['state_name']
+		district = request.form['district_name']
+		error = request.form['error']
+	return jsonify({"status" : True})
+
+@app.route('/state-date-total-data', methods=['GET'])
+def state_date_total_data():
+	sdtdJSON = {}
+	with open(DIR_DATA + "/APIData/state_date_total_data.json", 'r') as FPtr:
+		sdtdJSON = load(FPtr)
+	return jsonify(sdtdJSON)
+
+@app.route('/daily-states-complete', methods=['GET'])
+def daily_states_complete():
+	dscJSON = {}
+	with open(DIR_DATA + "/APIData/daily_states_complete.jsons", 'r') as FPtr:
+		dscJSON = load(FPtr)
+	return jsonify(dscJSON)
 
 @app.route('/i-donated-a-rick-roll', methods=['GET'])
 def donated():

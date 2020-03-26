@@ -18,11 +18,12 @@ from datetime import datetime
 from json import dump, load
 
 # Yes, the minion has it's own slaves to work.
-from BigDataBox.utils.daily_dates.daily_dates import daily_dates
+from BigDataBox.utils.daily.dates import daily_dates
 from BigDataBox.utils.latest_updates.latest_updates import latest_updates_V2
 from BigDataBox.utils.general.general import general
 from BigDataBox.utils.general.district_values import district_values
-from BigDataBox.utils.states_affected_numbers.states_affected_numbers import states_affected_numbers
+from BigDataBox.utils.daily.states_complete import daily_states_complete
+from BigDataBox.utils.state_date_total_data.state_date_total_data import state_date_total_data
 
 # Directories
 DIR_DATA = "../data/"
@@ -48,8 +49,8 @@ def do_your_work():
 	print ("Computing daily-dates...")
 	daily_dates(data)
 	
-	print ("Computing states-affected-numbers...")
-	states_affected_numbers(data)
+	print ("Computing daily-states-complete...")
+	daily_states_complete(data)
 
 	print ("Computing general...")
 	globalData, returnData = general(data)
@@ -59,6 +60,9 @@ def do_your_work():
 
 	print ("Computing district-values...")
 	district_values(globalData)
+
+	print ("Computing state-date-total-data...")
+	state_date_total_data(data)
 
 if __name__ == "__main__":
 	do_your_work()

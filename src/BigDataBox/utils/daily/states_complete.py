@@ -18,10 +18,9 @@ from datetime import datetime
 DIR_DATA = "../data/"
 
 def daily_states_complete(data):
-	DATA_daily_states = {}
+	DATA_daily_states_complete = {}
 	baseDate = datetime.combine(datetime.now().date(), datetime.min.time())
 
-	# Initial iteration
 	for row in data:
 		try:
 			DateUpdated = str(row[0])
@@ -51,23 +50,23 @@ def daily_states_complete(data):
 
 		DateUpdated_Compare = datetime.combine(datetime.strptime(DateUpdated, "%d/%m/%Y"), datetime.strptime(TimeUpdated, "%H:%M").time())
 
-		if state not in DATA_daily_states:
-			DATA_daily_states[state] = {
+		if state not in DATA_daily_states_complete:
+			DATA_daily_states_complete[state] = {
 				"TotalCases" : 0,
 				"NewCases" : 0,
 				"TotalDeaths" : 0,
 				"NewDeaths" : 0
 			}
 
-		DATA_daily_states[state]["TotalCases"] += infected
-		DATA_daily_states[state]["TotalDeaths"] += dead
+		DATA_daily_states_complete[state]["TotalCases"] += infected
+		DATA_daily_states_complete[state]["TotalDeaths"] += dead
 
 		if DateUpdated_Compare > baseDate:
 			# This is today's data, woop woop
-			DATA_daily_states[state]["NewCases"] += infected
-			DATA_daily_states[state]["NewDeaths"] += dead
+			DATA_daily_states_complete[state]["NewCases"] += infected
+			DATA_daily_states_complete[state]["NewDeaths"] += dead
 
 	with open(DIR_DATA + "APIData/daily_states_complete.json", 'w') as FPtr:
-		dump(DATA_daily_states, FPtr)
+		dump(DATA_daily_states_complete, FPtr)
 
 	return 1
