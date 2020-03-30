@@ -89,11 +89,18 @@ def district_date_total_data(data):
 	for date in DATA_ddtd:
 		# find the max value in DATA_ddtd
 		maxINF = 0
+		totalINF = 0
 		for district in DATA_ddtd[date]:
+			totalINF += DATA_ddtd[date][district]["infected"]
+
 			if DATA_ddtd[date][district]["infected"] > maxINF:
 				maxINF = DATA_ddtd[date][district]["infected"]
+
 		for district in DATA_ddtd[date]:
 			DATA_ddtd[date][district]["value"] = DATA_ddtd[date][district]["infected"] / maxINF
+
+		DATA_ddtd[date]["total-infected"] = totalINF
+		DATA_ddtd[date]["max-legend-value"] = maxINF
 
 	with open(DIR_DATA + "APIData/district_date_total_data.json", 'w') as FPtr:
 		dump(DATA_ddtd, FPtr)
