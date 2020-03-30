@@ -69,6 +69,13 @@ def daily_states_complete():
 		dscJSON = load(FPtr)
 	return jsonify(dscJSON)
 
+@app.route('/district-date-total-data', methods=['GET'])
+def district_date_total_data():
+	ddtdJSON = {}
+	with open(DIR_DATA + "/APIData/district_date_total_data.json", 'r') as FPtr:
+		ddtdJSON = load(FPtr)
+	return jsonify(ddtdJSON)
+
 @app.route('/i-donated-a-rick-roll', methods=['GET'])
 def donated():
 	try:
