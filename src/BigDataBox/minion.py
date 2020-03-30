@@ -20,14 +20,14 @@ from json import dump, load
 # Yes, the minion has it's own slaves to work.
 # I, Cereal God, urge you to go through their code and see their interests.
 # #SlavesLivesMattersAndSoDoTheirInterests
-from BigDataBox.utils.daily.dates import daily_dates
-from BigDataBox.utils.latest_updates.latest_updates import latest_updates_V2
-from BigDataBox.utils.general.general import general
-from BigDataBox.utils.general.district_values import district_values
-from BigDataBox.utils.daily.states_complete import daily_states_complete
-from BigDataBox.utils.state_date_total_data.state_date_total_data import state_date_total_data
-from BigDataBox.utils.states_affected_numbers.states_affected_numbers import states_affected_numbers
-from BigDataBox.utils.general.district_date_total_data import district_date_total_data
+from BigDataBox.utils.website.daily.dates import daily_dates
+from BigDataBox.utils.website.latest_updates.latest_updates import latest_updates_V2
+from BigDataBox.utils.website.general.general import general
+from BigDataBox.utils.website.general.district_values import district_values
+from BigDataBox.utils.website.daily.states_complete import daily_states_complete
+from BigDataBox.utils.website.state_date_total_data.state_date_total_data import state_date_total_data
+from BigDataBox.utils.website.states_affected_numbers.states_affected_numbers import states_affected_numbers
+from BigDataBox.utils.website.general.district_date_total_data import district_date_total_data
 
 # Directories
 DIR_DATA = "../data/"
