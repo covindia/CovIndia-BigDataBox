@@ -35,8 +35,9 @@ DIR_SRC = "src/"
 
 DIR_DATA = "../data/"
 
-if __name__ == "__main__":
+overallCount = 0
 
+if __name__ == "__main__":
 	# Set our working variables
 	minutes = args.minutes[0]
 	count = 1
@@ -59,10 +60,11 @@ if __name__ == "__main__":
 		print ("I failed my mission of delivering the message: Going online. ERROR: " + response.text)
 
 	try:
+		overallCount += 1
 		while True:
 			# Check if our code has changed from the git repository
-			run(['git', 'fetch'])
-			run(['git', 'pull', 'origin', branch])
+			# run(['git', 'fetch'])
+			# run(['git', 'pull', 'origin', branch])
 
 			# Make minion run and do our dirty work
 			minion.do_your_work() # I know, cute right?
@@ -74,24 +76,31 @@ if __name__ == "__main__":
 			run(['git', 'push'], cwd=DIR_DATA)
 
 			print ("Sleeping...")
+			if count >= countStopper:
+				count = 1
+				# Overlord-Bodyguard: Reporting for duty
+				pigeonCarrierMessage = {
+					"text": "Report:",
+					"attachments": [ { "text": "Update: Overlord is Alive."} ]
+				}
 
-			if count == 1:
-					# Overlord-Bodyguard: Reporting for duty
-					pigeonCarrierMessage = {
-						"text": "Report:",
-						"attachments": [ { "text": "Hourly update: Overlord is alive."} ]
-					}
+				response = requests.post(
+					slackCredentials["payloadURL"], json=pigeonCarrierMessage, headers={'Content-Type': 'application/json'}
+				)
 
-					response = requests.post(
-						slackCredentials["payloadURL"], json=pigeonCarrierMessage, headers={'Content-Type': 'application/json'}
-					)
+				if response.status_code != 200:
+					print ("I failed my mission of delivering the message: Hourly Update. ERROR: " + response.text)
 
-					if response.status_code != 200:
-						print ("I failed my mission of delivering the message: Hourly Update. ERROR: " + response.text)
-
+			count += 1
+			overallCount = 0
 			sleep (60*minutes)
 
+		mainFn()
+
 	except Exception as e:
+
+		print (e)
+
 		# Overlord-Bodyguard will sweep in and report it to the Cereal God on slack
 		pigeonCarrierMessage = {
 			"text": "<@" + slackCredentials["cerealGodUserID"] + ">! IMPORTANT: Overlord has been compromised. Treat this as urgent priority!",
@@ -106,3 +115,4 @@ if __name__ == "__main__":
 			raise ValueError("I failed my mission of delivering the message that overlord has been compromised. ERROR: " + response.text)
 		else:
 			print ("Cereal God Has been notified. We must await his action.")
+

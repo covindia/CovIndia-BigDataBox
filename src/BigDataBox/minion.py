@@ -24,6 +24,7 @@ from BigDataBox.utils.general.general import general
 from BigDataBox.utils.general.district_values import district_values
 from BigDataBox.utils.daily.states_complete import daily_states_complete
 from BigDataBox.utils.state_date_total_data.state_date_total_data import state_date_total_data
+from BigDataBox.utils.states_affected_numbers.states_affected_numbers import states_affected_numbers
 
 # Directories
 DIR_DATA = "../data/"
@@ -48,7 +49,7 @@ def do_your_work():
 
 	print ("Computing daily-dates...")
 	daily_dates(data)
-	
+
 	print ("Computing daily-states-complete...")
 	daily_states_complete(data)
 
@@ -63,6 +64,9 @@ def do_your_work():
 
 	print ("Computing state-date-total-data...")
 	state_date_total_data(data)
+
+	print ("Computing states-affected-numbers...")
+	states_affected_numbers(data)
 
 if __name__ == "__main__":
 	do_your_work()

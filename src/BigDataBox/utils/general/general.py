@@ -12,6 +12,8 @@
 from datetime import datetime
 from json import dump
 from pandas import read_html
+from bs4 import BeautifulSoup as bs
+from requests import get
 
 DIR_DATA = "../data/"
 
@@ -137,10 +139,37 @@ def general(data):
 
 	mohfwURL = "https://www.mohfw.gov.in/"
 
-	df = read_html(mohfwURL)
+	# df = read_html(mohfwURL)
 
-	TotalCured = df[7].iloc[-2].values[3] # CURED/DISCHARGED
-	TotalDeath = df[7].iloc[-2].values[4] # DEATH
+	# TotalCured = df[7].iloc[-2].values[3] # CURED/DISCHARGED
+	# TotalDeath = df[7].iloc[-2].values[4] # DEATH
+	# TotalCured = 78
+
+	r = get(mohfwURL)
+
+	soup = bs(r.text, 'html.parser')
+
+	lines = soup.prettify().split("\n")
+
+	lineFlag = False
+	for lineNumber in range(len(lines)):
+		if "cured.png" in lines[lineNumber]:
+			if "iblock_text" in lines[lineNumber+1]:
+				if "span" in lines[lineNumber+2] and "icount" in lines[lineNumber+2]:
+					if "Cured" in lines[lineNumber+6]:
+						lineFlag = True
+						lineTarget = lines[lineNumber+3]
+						break
+
+
+
+	if not lineFlag:
+		raise NameError("cured number in MOHFW wasn't found. :|")
+
+	lineTarget = lineTarget.replace(" ", "")
+	lineTarget = lineTarget.replace("\t", "")
+
+	TotalCured = int(lineTarget)
 
 	for districtBoi in globalData:
 		globalData[districtBoi]["value"] = globalData[districtBoi]["infected"] / infectedMax

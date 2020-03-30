@@ -40,6 +40,13 @@ def district_values():
 		districtValuesJSON = load(FPtr)
 	return jsonify(districtValuesJSON)
 
+@app.route('/states-affected-numbers', methods=['GET'])
+def states_affected_numbers():
+	sanJSON = {}
+	with open(DIR_DATA + "/APIData/states_affected_numbers.json", 'r') as FPtr:
+		sanJSON = load(FPtr)
+	return jsonify(sanJSON)
+
 @app.route('/report-an-error', methods=['GET', 'POST'])
 def report_an_error():
 	if request.method == 'POST':
@@ -58,7 +65,7 @@ def state_date_total_data():
 @app.route('/daily-states-complete', methods=['GET'])
 def daily_states_complete():
 	dscJSON = {}
-	with open(DIR_DATA + "/APIData/daily_states_complete.jsons", 'r') as FPtr:
+	with open(DIR_DATA + "/APIData/daily_states_complete.json", 'r') as FPtr:
 		dscJSON = load(FPtr)
 	return jsonify(dscJSON)
 
