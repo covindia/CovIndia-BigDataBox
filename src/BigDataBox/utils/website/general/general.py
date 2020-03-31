@@ -152,16 +152,14 @@ def general(data):
 	lines = soup.prettify().split("\n")
 
 	lineFlag = False
+
 	for lineNumber in range(len(lines)):
-		if "cured.png" in lines[lineNumber]:
-			if "iblock_text" in lines[lineNumber+1]:
-				if "span" in lines[lineNumber+2] and "icount" in lines[lineNumber+2]:
-					if "Cured" in lines[lineNumber+6]:
-						lineFlag = True
-						lineTarget = lines[lineNumber+3]
-						break
-
-
+		if "icon-inactive.png" in lines[lineNumber]:
+			if "strong" in lines[lineNumber+1]:
+				if "Cured" in lines[lineNumber+5]:
+					lineFlag = True
+					lineTarget = lines[lineNumber+2]
+					break
 
 	if not lineFlag:
 		raise NameError("cured number in MOHFW wasn't found. :|")
