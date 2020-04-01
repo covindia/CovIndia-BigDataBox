@@ -15,6 +15,7 @@
 
 from json import dump
 from datetime import datetime
+from collections import OrderedDict
 
 DIR_DATA = "../data/"
 
@@ -22,7 +23,7 @@ def district_date_total_data(data):
 	"""
 		The API function for district-date-total-data. Saves output to DIR_DATA / APIData / district_date_total_data.json
 	"""
-	DATA_ddtd = {}
+	DATA_ddtd = OrderedDict()
 	local_ddtd_total = {}
 
 	# NOTE: By doing this, I have reduced a O(n^2) algo to a O(n) algo.
