@@ -22,6 +22,7 @@ with open(DIR_DATA + "/res/crowdsourcing_URL", 'r') as F:
 sheet = client.open_by_url(URL).worksheet('Sheet1')
 
 app = flask.Flask(__name__)
+app.config['JSON_SORT_KEYS'] = False
 limiter = Limiter(
 	app,
 	key_func=get_remote_address,
@@ -104,8 +105,7 @@ def report_numbers():
 			formData = {}
 			compusloryFields = ['state', 'district', 'infected', 'death', 'number', 'date', 'source']
 			optionalFields = ['name']
-			for field in request.form:
-				print (field, request.form[field], type(field))
+
 			for field in compusloryFields:
 				if request.form[field] == "":
 					return jsonify({"success" : False, "message" : "Could not retrieve " + field})
