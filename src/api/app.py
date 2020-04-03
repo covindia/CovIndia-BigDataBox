@@ -1,12 +1,32 @@
 import flask
 from flask import jsonify, request
 from json import load, dump
+from datetime import datetime
 import os
 
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
+
+import gspread
+from oauth2client.service_account import ServiceAccountCredentials
 
 DIR_DATA = os.environ['DATA_REPO_PATH']
 
+# Set the connection between GSheets and this server
+scope = ['https://spreadsheets.google.com/feeds']
+creds = ServiceAccountCredentials.from_json_keyfile_name(DIR_DATA + '/res/crowdsourcing_creds.json',scope)
+client = gspread.authorize(creds)
+
+with open(DIR_DATA + "/res/crowdsourcing_URL", 'r') as F:
+	URL = F.read()
+sheet = client.open_by_url(URL).worksheet('Sheet1')
+
 app = flask.Flask(__name__)
+limiter = Limiter(
+	app,
+	key_func=get_remote_address,
+	default_limits=["30 per minute"],
+)
 
 @app.route('/', methods=['GET'])
 def home():
@@ -75,6 +95,53 @@ def district_date_total_data():
 	with open(DIR_DATA + "/APIData/district_date_total_data.json", 'r') as FPtr:
 		ddtdJSON = load(FPtr)
 	return jsonify(ddtdJSON)
+
+@app.route('/report-numbers', methods=['GET', 'POST'])
+@limiter.limit("5 per minute")
+def report_numbers():
+	try:
+		if request.method == 'POST':
+			formData = {}
+			compusloryFields = ['state', 'district', 'infected', 'death', 'number', 'date', 'source']
+			optionalFields = ['name']
+			for field in request.form:
+				print (field, request.form[field], type(field))
+			for field in compusloryFields:
+				if request.form[field] == "":
+					return jsonify({"success" : False, "message" : "Could not retrieve " + field})
+				formData[field] = request.form[field]
+			
+			for field in optionalFields:
+				try:
+					formData[field] = request.form[field]
+				except:
+					formData[field] = None
+
+			# The sheet stores data in this formmat:
+			# Date, Time, State, District, Infected, Death, Source Link, Name
+			submitList = [
+				formData['date'],
+				datetime.now().strftime("%H:%M"),
+				formData['state'],
+				formData['district']
+			]
+			if formData['infected'] in ["True", 'true', True]:
+				submitList.append(formData['number'])
+				submitList.append(None)
+			else:
+				submitList.append(None)
+				submitList.append(formData['number'])
+			submitList.append(formData['source'])
+			submitList.append(formData['name'])
+
+			sheet.append_row(submitList)
+
+			return jsonify({"success" : True, "message" : "Thank you!"})
+		else:
+			return jsonify({"success" : False, "message" : "Please post some data"})	
+	except Exception as e:
+		print (e)
+		return jsonify({"success" : False, "message" : str(e)})
 
 @app.route('/i-donated-a-rick-roll', methods=['GET'])
 def donated():
