@@ -18,8 +18,7 @@ app = flask.Flask(__name__)
 app.config['JSON_SORT_KEYS'] = False
 limiter = Limiter(
 	app,
-	key_func=get_remote_address,
-	default_limits=["1 per 1 second"]
+	key_func=get_remote_address
 )
 
 @app.route('/', methods=['GET'])
