@@ -22,7 +22,6 @@ parser = ArgumentParser(description="https://covindia.com's complete overlord. W
 parser.add_argument("--minutes", '-m', type=int, nargs=1, required=False, default=[5], help="amount of time (in minutes, duh) to sleep for between updates of the website")
 
 # TODO: Add arguments for RES, PUBLISH, SRC _DIRS
-# TODO: Add arguments for branch
 # TODO: Add verbosity
 
 # TODO: Complete todos
@@ -38,10 +37,12 @@ DIR_DATA = "../data/"
 overallCount = 0
 
 if __name__ == "__main__":
-	# Set our working variables
 	minutes = args.minutes[0]
-	count = 1
-	countStopper = int((60 / minutes)/2)
+
+	# These are if the scrapbois are editing the sheet and we get some sort of incomplete data
+	# A race condition between a computer thread and human fingers
+	ERROR_THRESHOLD = 5
+	error_count = 0
 
 	with open(DIR_RES + "slack_resources.json", 'r') as FPtr:
 		slackCredentials = load(FPtr)
@@ -59,15 +60,11 @@ if __name__ == "__main__":
 	if response.status_code != 200:
 		print ("I failed my mission of delivering the message: Going online. ERROR: " + response.text)
 
-	try:
-		overallCount += 1
-		while True:
-			# Check if our code has changed from the git repository
-			# run(['git', 'fetch'])
-			# run(['git', 'pull', 'origin', branch])
-
+	while (error_count < ERROR_THRESHOLD):
+		try:
 			# Make minion run and do our dirty work
 			minion.do_your_work() # I know, cute right?
+			error_count = 0
 
 			# Data needs to be distributed amongst droplets. Triggers through git hooks
 			run('git add .'.split(), cwd=DIR_DATA)
@@ -78,6 +75,7 @@ if __name__ == "__main__":
 			print ("Sleeping...")
 			if count >= countStopper:
 				count = 1
+
 				# Overlord-Bodyguard: Reporting for duty
 				pigeonCarrierMessage = {
 					"text": "Report:",
@@ -91,28 +89,48 @@ if __name__ == "__main__":
 				if response.status_code != 200:
 					print ("I failed my mission of delivering the message: Hourly Update. ERROR: " + response.text)
 
-			count += 1
-			overallCount = 0
-			sleep (60*minutes)
 
-		mainFn()
+		except Exception as e:
+			print (e)
+			error_count += 1
 
-	except Exception as e:
+			pigeonCarrierMessage = {
+				"text": "Encountered a glitch. Will try again in " + str(minutes) + " minutes. Attempt (" + str(error_count) + "/" + str(ERROR_THRESHOLD) + ")",
+				"attachments": [ { "text": "Exception: " + str(e) } ]
+			}
 
-		print (e)
+			response = requests.post(
+				slackCredentials["payloadURL"], json=pigeonCarrierMessage, headers={'Content-Type': 'application/json'}
+			)
 
-		# Overlord-Bodyguard will sweep in and report it to the Cereal God on slack
-		pigeonCarrierMessage = {
-			"text": "<@" + slackCredentials["cerealGodUserID"] + ">! IMPORTANT: Overlord has been compromised. Treat this as urgent priority!",
-			"attachments": [ { "text": "Exception: " + str(e) } ]
-		}
+			if response.status_code != 200:
+				print ("I failed my mission of delivering the message: Encoutered a glitch. ERROR: " + response.text)
 
-		response = requests.post(
-			slackCredentials["payloadURL"], json=pigeonCarrierMessage, headers={'Content-Type': 'application/json'}
-		)
+		count += 1
+		sleep (60*minutes)
 
-		if response.status_code != 200:
-			raise ValueError("I failed my mission of delivering the message that overlord has been compromised. ERROR: " + response.text)
-		else:
-			print ("Cereal God Has been notified. We must await his action.")
+	# Okay.... so the while loop exited. Not a good sign
 
+	# Overlord-Bodyguard will sweep in and report it to the Cereal God on slack
+	pigeonCarrierMessage = {
+		"text": "<@" + slackCredentials["cerealGodUserID"] + ">! IMPORTANT: Overlord has been compromised! Manual restart required",
+	}
+
+	response = requests.post(
+		slackCredentials["payloadURL"], json=pigeonCarrierMessage, headers={'Content-Type': 'application/json'}
+	)
+
+	if response.status_code != 200:
+		raise ValueError("I failed my mission of delivering the message that overlord has been compromised. ERROR: " + response.text)
+	else:
+		print ("\n\nIceCereal has been notified\n\n")
+
+
+
+"""
+	Note from the Cereal God himself (Omagosh! *froth forms*):
+		Having fun with code / comments is important.
+
+		That being said, don't take my notes seriously. I'm a plebian who uses debian.
+
+"""

@@ -19,7 +19,7 @@ app.config['JSON_SORT_KEYS'] = False
 limiter = Limiter(
 	app,
 	key_func=get_remote_address,
-	default_limits=["1 per 2 seconds"]
+	default_limits=["1 per 1 second"]
 )
 
 @app.route('/', methods=['GET'])
