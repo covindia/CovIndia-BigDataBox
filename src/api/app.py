@@ -151,3 +151,33 @@ def donated():
 		print ("Rick rolled someone! :yay:")
 
 	return jsonify({"message": "LMAO"})
+
+##### PUBLIC
+
+@app.route('/covindia-district-date-data', methods=['GET'])
+def covindia_district_date_data():
+	cdddJSON = {}
+	with open(DIR_DATA + "/PublicData/covindia_district_date_data.json", 'r') as FPtr:
+		cdddJSON = load(FPtr)
+	return jsonify(cdddJSON)
+
+@app.route('/covindia-state-data', methods=['GET'])
+def covindia_state_data():
+	csdJSON = {}
+	with open(DIR_DATA + "/PublicData/covindia_state_data.json", 'r') as FPtr:
+		csdJSON = load(FPtr)
+	return jsonify(csdJSON)
+
+@app.route('/covindia-general-data', methods=['GET'])
+def covindia_general_data():
+	cgdJSON = {}
+	with open(DIR_DATA + "/PublicData/covindia_general_data.json", 'r') as FPtr:
+		cgdJSON = load(FPtr)
+	return jsonify(cgdJSON)
+
+@app.route('/covindia-raw-data', methods=['GET'])
+def covindia_raw_data():
+	crdJSON = {}
+	with open(DIR_DATA + "/PublicData/covindia_raw_data.json", 'r') as FPtr:
+		crdJSON = load(FPtr)
+	return jsonify(crdJSON)

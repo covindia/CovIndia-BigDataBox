@@ -29,6 +29,11 @@ from BigDataBox.utils.website.state_date_total_data.state_date_total_data import
 from BigDataBox.utils.website.states_affected_numbers.states_affected_numbers import states_affected_numbers
 from BigDataBox.utils.website.general.district_date_total_data import district_date_total_data
 
+from BigDataBox.utils.public.covindia.raw_data import raw_data
+from BigDataBox.utils.public.covindia.state_data import state_data
+from BigDataBox.utils.public.covindia.general_data import general_data
+from BigDataBox.utils.public.covindia.district_date_data import district_date_data
+
 # Directories
 DIR_DATA = "../data/"
 DIR_RES = "res/"
@@ -73,6 +78,19 @@ def do_your_work():
 
 	print ("Computing district-date-total-data...")
 	district_date_total_data(data)
+
+	print ("Public:")
+	print ("Computing covindia-raw-data...")
+	raw_data(data)
+
+	print ("Computing covindia-state_data...")
+	state_data(data)
+
+	print ("Computing covindia-general-data...")
+	general_data(data)
+
+	print ("Computing covindia-district-date-data...")
+	district_date_data(data)
 
 if __name__ == "__main__":
 	do_your_work()
