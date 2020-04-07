@@ -23,54 +23,54 @@ def raw_data(data):
 	DATA_rd = OrderedDict()
 	counter = 0
 
-	DATA_rd["reference"] = ["date", "time", "state", "district", "infected", "death", "source"]
+	# DATA_rd["reference"] = ["date", "time", "state", "district", "infected", "death", "source"]
 
 	for row in data:
-		localList = []
+		localDict = OrderedDict()
 
 		try:
 			# DATE
-			localList.append(str(row[0]))
+			localDict["date"] = str(row[0])
 		except:
-			localList.append("NA")
+			localDict["date"] = "NA"
 
 		try:
 			# TIME
-			localList.append(str(row[1]))
+			localDict["time"] = str(row[1])
 		except:
-			localList.append("NA")
-
-		try:
-			# STATE
-			localList.append(str(row[2]))
-		except:
-			localList.append("NA")
+			localDict["time"] = "NA"
 
 		try:
 			# DISTRICT
-			localList.append(str(row[3]))
+			localDict["district"] = str(row[3])
 		except:
-			localList.append("NA")
+			localDict["district"] = "NA"
+
+		try:
+			# STATE
+			localDict["state"] = str(row[2])
+		except:
+			localDict["state"] = "NA"
 
 		try:
 			# INFECTED
-			localList.append(int(row[4]))
+			localDict["infected"] = int(row[4])
 		except:
-			localList.append(0)
+			localDict["infected"] = 0
 
 		try:
 			# DEATH
-			localList.append(int(row[5]))
+			localDict["death"] = int(row[5])
 		except:
-			localList.append(0)
+			localDict["death"] = 0
 
 		try:
 			# SOURCE
-			localList.append(str(row[6]))
+			localDict["source"] = str(row[6])
 		except:
-			localList.append("NA")
+			localDict["source"] = "NA"
 
-		DATA_rd[counter] = localList
+		DATA_rd[counter] = localDict
 		counter += 1
 
 	with open(DIR_DATA + "PublicData/covindia_raw_data.json", 'w') as FPtr:
