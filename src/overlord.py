@@ -44,6 +44,9 @@ if __name__ == "__main__":
 	ERROR_THRESHOLD = 5
 	error_count = 0
 
+	count = 0
+	countStopper = 5
+
 	with open(DIR_RES + "slack_resources.json", 'r') as FPtr:
 		slackCredentials = load(FPtr)
 
