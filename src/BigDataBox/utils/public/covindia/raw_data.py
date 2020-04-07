@@ -11,6 +11,7 @@
 
 from json import dump
 from datetime import datetime
+from collections import OrderedDict
 
 DIR_DATA = "../data/"
 
@@ -19,8 +20,10 @@ def raw_data(data):
 		The API function for raw-data. Saves output to DIR_DATA / PublicData / covindia_raw_data.json
 	"""
 
-	DATA_rd = {}
+	DATA_rd = OrderedDict()
 	counter = 0
+
+	DATA_rd["reference"] = ["date", "time", "state", "district", "infected", "death", "source"]
 
 	for row in data:
 		localList = []
@@ -44,7 +47,7 @@ def raw_data(data):
 			localList.append("NA")
 
 		try:
-			# District
+			# DISTRICT
 			localList.append(str(row[3]))
 		except:
 			localList.append("NA")
