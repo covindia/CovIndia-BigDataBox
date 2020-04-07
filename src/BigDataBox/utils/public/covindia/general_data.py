@@ -166,23 +166,13 @@ def general_data(data):
 
 	TotalCured = int(lineTarget)
 
-	districtsList = districtsAffected[0]
-	statesList = statesAffected[0]
-	for distNum in range(1, len(districtsAffected)):
-		if districtsAffected[distNum].startswith("Aurangabad"):
-			districtsList += ", Aurangabad"
-		else:
-			districtsList += ", " + districtsAffected[distNum]
-	for stateNum in range(1, len(statesAffected)):
-		statesList += ", " + statesAffected[stateNum]
-
 	generalData = {
 		"deathTotal" : int(deadTotal),
-		"districtList" : districtsList,
+		"districtList" : districtsAffected,
 		"infectedTotal" : int(infectedTotal),
 		"infectedMax" : int(infectedMax),
 		"lastUpdatedTime" : str(datetime.now()),
-		"statesList" : statesList,
+		"statesList" : statesAffected,
 		"totalCured" : int(TotalCured)
 	}
 
