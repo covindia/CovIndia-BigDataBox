@@ -2,7 +2,7 @@
 	Man, who let the onion ninja's in?
 
 	https://www.youtube.com/watch?v=lq8QVqh14Wc is this weeb slave's favorite video.
-	
+
 	Full Metal Alchemist: Brotherhood is definitely this slave's favorite Anime, so much so that
 	it named it's computer after Winry, the beautiful beautiful waifu.
 
@@ -165,9 +165,6 @@ def general_data(data):
 	lineTarget = lineTarget.replace("\t", "")
 
 	TotalCured = int(lineTarget)
-
-	for districtBoi in globalData:
-		globalData[districtBoi]["value"] = globalData[districtBoi]["infected"] / infectedMax
 
 	districtsList = districtsAffected[0]
 	statesList = statesAffected[0]

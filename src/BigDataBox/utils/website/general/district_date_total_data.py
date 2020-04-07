@@ -19,10 +19,11 @@ from collections import OrderedDict
 
 DIR_DATA = "../data/"
 
-def district_date_total_data(data):
+def district_date_total_data(original_data):
 	"""
 		The API function for district-date-total-data. Saves output to DIR_DATA / APIData / district_date_total_data.json
 	"""
+	data = original_data[:]
 	DATA_ddtd = OrderedDict()
 	local_ddtd_total = {}
 

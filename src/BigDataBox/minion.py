@@ -16,6 +16,7 @@ import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 from datetime import datetime
 from json import dump, load
+import copy
 
 # Yes, the minion has it's own slaves to work.
 # I, Cereal God, urge you to go through their code and see their interests.
@@ -77,7 +78,8 @@ def do_your_work():
 	states_affected_numbers(data)
 
 	print ("Computing district-date-total-data...")
-	district_date_total_data(data)
+	dataCopy = copy.deepcopy(data)
+	district_date_total_data(dataCopy)
 
 	print ("Public:")
 	print ("Computing covindia-raw-data...")
@@ -90,7 +92,8 @@ def do_your_work():
 	general_data(data)
 
 	print ("Computing covindia-district-date-data...")
-	district_date_data(data)
+	dataCopy = copy.deepcopy(data)
+	district_date_data(dataCopy)
 
 if __name__ == "__main__":
 	do_your_work()

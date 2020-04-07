@@ -27,6 +27,7 @@ def district_date_data(data):
 	# NOTE to the reader: Attend your algos classes. They help.
 	for row in data:
 		Date = datetime.strptime(str(row[0]), "%d/%m/%Y")
+
 		row.insert(0, Date)
 
 	# However, sorting is still a O(n*log(n)), so overall complexity remains to be O(n*log(n))

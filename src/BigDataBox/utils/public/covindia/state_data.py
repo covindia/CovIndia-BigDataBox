@@ -33,10 +33,13 @@ def state_data(data):
 			try:
 				DATA_sd[state] += 0
 			except:
-				if row[4] == "":
-					DATA_sd[state] = 0
+				if row[4] == "" or row[4] == '':
+					try:
+						DATA_sd[state] += 0
+					except:
+						DATA_sd[state] = 0
 				else:
-					DATA_sd[state] = int(row[4])
+					DATA_sd[state] = 0
 
 	# UNCOMMENT THIS IF YOU WANT TO STILL USE A DEPRECATED FUNCTION, GODDAMNIT
 	with open(DIR_DATA + "PublicData/covindia_state_data.json", 'w') as FPtr:
