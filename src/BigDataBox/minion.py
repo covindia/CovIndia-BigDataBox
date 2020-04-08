@@ -57,7 +57,8 @@ def do_your_work():
 	data = data[1:]
 
 	print ("Computing daily-dates...")
-	daily_dates(data)
+	dataCopy = copy.deepcopy(data)
+	daily_dates(dataCopy)
 
 	print ("Computing daily-states-complete...")
 	daily_states_complete(data)

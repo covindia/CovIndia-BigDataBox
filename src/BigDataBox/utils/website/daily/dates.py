@@ -11,6 +11,7 @@
 
 from datetime import datetime
 from json import dump
+from collections import OrderedDict
 
 DIR_DATA = "../data/"
 
@@ -18,14 +19,25 @@ def daily_dates(data):
 	"""
 		The API function for daily-dates.  Saves output to DIR_DATA / APIData / daily_date.json
 	"""
-	DATA_daily_dates = {}
+	DATA_daily_dates = OrderedDict()
+
+	# NOTE: By doing this, I have reduced a O(n^2) algo to a O(n) algo.
+	# NOTE to the reader: Attend your algos classes. They help.
 	for row in data:
-		date = str(row[0])
+		Date = datetime.strptime(str(row[0]), "%d/%m/%Y")
+
+		row.insert(0, Date)
+
+	# However, sorting is still a O(n*log(n)), so overall complexity remains to be O(n*log(n))
+	data.sort()
+	
+	for row in data:
+		date = str(row[1])
 
 		try:
 			cutoff = datetime(2020, 3, 1)
 			if datetime.strptime(date, "%d/%m/%Y") > cutoff:
-				DATA_daily_dates[str(date)] += int(row[4])
+				DATA_daily_dates[str(date)] += int(row[5])
 		except:
 			try:
 				DATA_daily_dates[str(date)] += 0
@@ -34,3 +46,5 @@ def daily_dates(data):
 
 	with open(DIR_DATA + "APIData/daily_dates.json", 'w') as FPtr:
 		dump(DATA_daily_dates, FPtr)
+
+	return 1
