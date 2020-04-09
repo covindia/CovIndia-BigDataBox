@@ -30,10 +30,10 @@ from BigDataBox.utils.website.state_date_total_data.state_date_total_data import
 from BigDataBox.utils.website.states_affected_numbers.states_affected_numbers import states_affected_numbers
 from BigDataBox.utils.website.general.district_date_total_data import district_date_total_data
 
-from utils.public.covindia.raw_data import raw_data
-from utils.public.covindia.state_data import state_data
-from utils.public.covindia.general_data import general_data
-from utils.public.covindia.district_date_data import district_date_data
+from BigDataBox.utils.public.covindia.raw_data import raw_data
+from BigDataBox.utils.public.covindia.state_data import state_data
+from BigDataBox.utils.public.covindia.general_data import general_data
+from BigDataBox.utils.public.covindia.district_date_data import district_date_data
 
 # Directories
 DIR_DATA = "../data/"
