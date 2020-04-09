@@ -30,19 +30,28 @@ def daily_dates(data):
 
 	# However, sorting is still a O(n*log(n)), so overall complexity remains to be O(n*log(n))
 	data.sort()
-	
+
 	for row in data:
 		date = str(row[1])
 
-		try:
-			cutoff = datetime(2020, 3, 1)
-			if datetime.strptime(date, "%d/%m/%Y") > cutoff:
-				DATA_daily_dates[str(date)] += int(row[5])
-		except:
-			try:
-				DATA_daily_dates[str(date)] += 0
-			except:
-				DATA_daily_dates[str(date)] = 0
+		cutoff = datetime(2020, 3, 1)
+		if datetime.strptime(date, "%d/%m/%Y") > cutoff:
+			# If date already exists in the dictionary
+			if str(date) in DATA_daily_dates:
+				try:
+					# Add the number of cases to the dictionary
+					DATA_daily_dates[str(date)] += int(row[5])
+				except:
+					# For cases where row[5] == '' or ""
+					DATA_daily_dates[str(date)] += 0
+			# If date doesn't exist in the dictionary, i.e. new date
+			else:
+				try:
+					# Set it to the number inside the cell
+					DATA_daily_dates[str(date)] = int(row[5])
+				except:
+					# For cases where row[5] == '' or ""
+					DATA_daily_dates[str(date)] = 0
 
 	with open(DIR_DATA + "APIData/daily_dates.json", 'w') as FPtr:
 		dump(DATA_daily_dates, FPtr)
