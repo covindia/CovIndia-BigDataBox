@@ -18,13 +18,23 @@ DIR_DATA = "../data/"
 
 def latest_updates_V2(data, number_of_latest_updates):
 	"""
-		Calculate the difference between old data and new data. Saves output to DIR_DATA / APIData / latest_updates.json
+		The API function for latest-updates
+
+		Returns a JSON of *HTML* <- This is important. (Easy for front-end)
+		There are going to be number_of_latest_updates (an arg) items in the JSON which contain
+		already bolded, punctuated and Englished sentences of the latest updates.
 
 		Version 2 of Latest_Updates. The cooler older brother who does stuff better without thinking
 		brainlessly.
+
+		Function returns (status, list_of_error)
+		1 = All good
+		-1 = Something died
 	"""
 	data.reverse()
 	DATA_latest_updates = {}
+
+	failList = []
 
 	count = 0
 	for entry in data:
@@ -34,8 +44,10 @@ def latest_updates_V2(data, number_of_latest_updates):
 		# No source -_-, get the source scrapbois. Goddamnit.
 		try:
 			if entry[6] == '' or entry[6] == " ":
+				failList.append("BigDataBox.utils.website.latest_updates.latest_updates: entry[6] (link). Could not extract source (no source given) {" + row + "}" )
 				continue
 		except:
+			failList.append("BigDataBox.utils.website.latest_updates.latest_updates: entry[6] (link). Could not extract source (error unknown) {" + row + "}" )
 			continue
 
 		state = str(entry[2])
@@ -85,7 +97,10 @@ def latest_updates_V2(data, number_of_latest_updates):
 	with open(DIR_DATA + "APIData/latest_updates.json", 'w') as FPtr:
 		dump(DATA_latest_updates, FPtr)
 
-	return 1
+	if len(failList) != 0:
+		return (-1, failList)
+
+	return (1, None)
 
 ###### DEPRECATED ######
 def latest_updates_V1(diffsList):

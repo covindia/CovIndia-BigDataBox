@@ -30,10 +30,10 @@ from BigDataBox.utils.website.state_date_total_data.state_date_total_data import
 from BigDataBox.utils.website.states_affected_numbers.states_affected_numbers import states_affected_numbers
 from BigDataBox.utils.website.general.district_date_total_data import district_date_total_data
 
-from BigDataBox.utils.public.covindia.raw_data import raw_data
-from BigDataBox.utils.public.covindia.state_data import state_data
-from BigDataBox.utils.public.covindia.general_data import general_data
-from BigDataBox.utils.public.covindia.district_date_data import district_date_data
+from utils.public.covindia.raw_data import raw_data
+from utils.public.covindia.state_data import state_data
+from utils.public.covindia.general_data import general_data
+from utils.public.covindia.district_date_data import district_date_data
 
 # Directories
 DIR_DATA = "../data/"
@@ -56,31 +56,56 @@ def do_your_work():
 	data = sheet.get()
 	data = data[1:]
 
+	FAILLIST = []
+
 	print ("Computing daily-dates...")
 	dataCopy = copy.deepcopy(data)
-	daily_dates(dataCopy)
+	flag, failList = daily_dates(dataCopy)
+
+	if flag == -1:
+		FAILLIST.append(i for i in failList)
 
 	print ("Computing daily-states-complete...")
-	daily_states_complete(data)
+	flag, failList = daily_states_complete(data)
+
+	if flag == -1:
+		FAILLIST.append(i for i in failList)
 
 	print ("Computing general...")
-	globalData, returnData = general(data)
+	DATA_general = general(data)
 
 	print ("Computing latest-updates...")
-	latest_updates_V2(data, 5)
+	flag, failList = latest_updates_V2(data, 5)
+
+	if flag == -1:
+		FAILLIST.append(i for i in failList)
 
 	print ("Computing district-values...")
-	district_values(globalData)
+	flag, failList = district_values(DATA_general)
+
+	if flag == -1:
+		FAILLIST.append(i for i in failList)
 
 	print ("Computing state-date-total-data...")
-	state_date_total_data(data)
+	flag, failList = state_date_total_data(data)
+
+	if flag == -1:
+		FAILLIST.append(i for i in failList)
 
 	print ("Computing states-affected-numbers...")
-	states_affected_numbers(data)
+	flag, failList = states_affected_numbers(data)
+
+	if flag == -1:
+		FAILLIST.append(i for i in failList)
 
 	print ("Computing district-date-total-data...")
 	dataCopy = copy.deepcopy(data)
-	district_date_total_data(dataCopy)
+	flag, failList = district_date_total_data(dataCopy)
+
+	if flag == -1:
+		FAILLIST.append(i for i in failList)
+
+	print (FAILLIST)
 
 	print ("Public:")
 	print ("Computing covindia-raw-data...")

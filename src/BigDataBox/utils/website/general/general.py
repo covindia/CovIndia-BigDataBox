@@ -19,19 +19,26 @@ DIR_DATA = "../data/"
 
 def general(data):
 	"""
-		The API function for general.  Saves output to DIR_DATA / APIData / index_general.json
+		The API function for general.
+
+		Returns a JSON of general data including total infected, total dead, max infected and
+		the rest you can see at the bottom where generalData is declared.
+
+		Function returns DATA_general, to be used by general.district_values
 	"""
 	infectedTotal = 0
 	deadTotal = 0
-	globalData = {}
-	returnData = {}
+	DATA_general = {}
 
 	for row in data:
 		try:
 			district = row[3]
+		
 		except:
-			pass
+			# No district
+			district = ''
 
+		# DIST_NA is a report in a state where the district is not known.
 		if district == "DIST_NA":
 			try:
 				infectedTotal += int(row[4])
@@ -51,99 +58,71 @@ def general(data):
 		except:
 			DateUpdated = datetime.now().strftime("%d/%m/%Y")
 
-		returnDict = {}
+		# District already doesn't have an entry in DATA_general
+		if district not in DATA_general:
+			DATA_general[district] = {
+				"infected" : 0,
+				"dead" : 0,
+				"state" : ""
+			}
 
-		if district in globalData:
-			try:
-				globalData[district]["infected"] += int(row[4])
-				returnDict["infected"] = int(row[4])
-			except:
-				returnDict["infected"] = 0
+		try:
+			DATA_general[district]["infected"] += int(row[4])
+		except:
+			# This only happens when row[4] is '' or ""
+			pass
 
-			try:
-				globalData[district]["dead"] += int(row[5])
-				returnDict["dead"] = int(row[5])
-			except:
-				returnDict["dead"] = 0
+		try:
+			DATA_general[district]["dead"] += int(row[5])
+		except:
+			# This only happens when row[5] is '' or ""
+			pass
 
-			try:
-				returnDict["state"] = str(row[2])
-			except:
-				returnDict["state"] = ""
-
-			try:
-				returnDict["source"] = str(row[6])
-			except:
-				returnDict["source"] = ""
-
-
-		else:
-			globalData[district] = {}
-			try:
-				globalData[district]["infected"] = int(row[4])
-				returnDict["infected"] = int(row[4])
-			except:
-				globalData[district]["infected"] = 0
-				returnDict["infected"] = 0
-
-			try:
-				globalData[district]["dead"] = int(row[5])
-				returnDict["dead"] = int(row[5])
-			except:
-				globalData[district]["dead"] = 0
-				returnDict["dead"] = 0
-			try:
-				globalData[district]["state"] = str(row[2])
-				returnDict["state"] = str(row[2])
-			except:
-				globalData[district]["state"] = ""
-				returnDict["state"] = ""
-
-			try:
-				globalData[district]["source"] = str(row[6])
-				returnDict["source"] = str(row[6])
-			except:
-				globalData[district]["source"] = ""
-				returnDict["source"] = ""
-
-		DateTime = DateUpdated +" "+ TimeUpdated
-		returnDict["time"] = DateTime
-
-		if district in returnData:
-			returnData[district].append(returnDict)
-		else:
-			returnData[district] = [returnDict]
+		# This isn't really required (or used anywhere) but we just keep assigning the state over & over again.
+		# Possible TODO: assert that it doesn't change.
+		try:
+			DATA_general[district]["state"] = str(row[2])
+		except:
+			pass
 
 	infectedMax = 0
 	deadMax = 0
 
-	districtsAffected = []
-	statesAffected = []
+	districtsAffected = [] # List of districts with infected people
+	statesAffected = [] # List of states with infected people
 
-	for district in globalData:
+	# This loop primarily calculates our entries in generalData
+
+	# Calculate the infectedMax and deadMax
+	for district in DATA_general:
+		# If district is DIST_NA, we skip. All the DIST_NA's across all rows would have piled up
+		# in this (key, value) in DATA_general
 		if district == "DIST_NA":
 			continue
-		if globalData[district]["infected"] > infectedMax:
-			infectedMax = globalData[district]["infected"]
-		if globalData[district]["dead"] > deadMax:
-			deadMax = globalData[district]["dead"]
 
+		# Simple check and resassign to get infectedMax
+		if DATA_general[district]["infected"] > infectedMax:
+			infectedMax = DATA_general[district]["infected"]
+
+		# Simple check and resassign to get deadMax
+		if DATA_general[district]["dead"] > deadMax:
+			deadMax = DATA_general[district]["dead"]
+
+		# districtsAffected is a list of all districts with infected people
 		if district not in districtsAffected:
 			districtsAffected.append(district)
 
-		if globalData[district]["state"] not in statesAffected:
-			statesAffected.append(globalData[district]["state"])
+		# statesAffected is a list of all states with infected people
+		if DATA_general[district]["state"] not in statesAffected:
+			statesAffected.append(DATA_general[district]["state"])
 
-		infectedTotal += globalData[district]["infected"]
-		deadTotal += globalData[district]["dead"]
+		# Calculating the total infected and dead
+		infectedTotal += DATA_general[district]["infected"]
+		deadTotal += DATA_general[district]["dead"]
 
-	mohfwURL = "https://www.mohfw.gov.in/"
-
-	# df = read_html(mohfwURL)
-
-	# TotalCured = df[7].iloc[-2].values[3] # CURED/DISCHARGED
-	# TotalDeath = df[7].iloc[-2].values[4] # DEATH
-	# TotalCured = 78
+	#### BELOW IS VERY VOLATILE CODE. HANDLE WITH CAUTION
+	
+	mohfwURL = "https://www.mohfw.gov.in/" # To get the total cured values
 
 	r = get(mohfwURL)
 
@@ -153,6 +132,7 @@ def general(data):
 
 	lineFlag = False
 
+	# This isn't very pretty, but know that it works and their website is built like this.
 	for lineNumber in range(len(lines)):
 		if "icon-inactive.png" in lines[lineNumber]:
 			if "strong" in lines[lineNumber+1]:
@@ -169,30 +149,34 @@ def general(data):
 
 	TotalCured = int(lineTarget)
 
-	for districtBoi in globalData:
-		globalData[districtBoi]["value"] = globalData[districtBoi]["infected"] / infectedMax
+	### VOLATILE CODE ENDS
 
-	districtsList = districtsAffected[0]
-	statesList = statesAffected[0]
-	for distNum in range(1, len(districtsAffected)):
-		if districtsAffected[distNum].startswith("Aurangabad"):
-			districtsList += ", Aurangabad"
-		else:
-			districtsList += ", " + districtsAffected[distNum]
-	for stateNum in range(1, len(statesAffected)):
-		statesList += ", " + statesAffected[stateNum]
+	# Calculate the "value" of each district.
+	# "value" corresponds to the color on the map
 
+	# For now, value is calculated in a linear fashion.
+	# However, an outlier (with a very high infected number) diminishes the value of other districts.
+	# Hence, there are plans to convert this to a:
+	# 	> logarithmic scale where the base is infectedMax to give a number between 0 & 1
+	# 	> decible scale (logarithmic but multiplied)
+	# 	> A vertically stretched sigmoid or arctan function
+	#
+	# Suggestions are welcome
+	for district in DATA_general:
+		DATA_general[district]["value"] = DATA_general[district]["infected"] / infectedMax
+
+	# api.covindia.com/general
 	generalData = {
 		"deathTotal" : int(deadTotal),
-		"districtList" : districtsList,
+		"districtList" : districtsAffected,
 		"infectedTotal" : int(infectedTotal),
 		"infectedMax" : int(infectedMax),
 		"lastUpdatedTime" : str(datetime.now()),
-		"statesList" : statesList,
+		"statesList" : statesAffected,
 		"totalCured" : int(TotalCured)
 	}
 
 	with open(DIR_DATA + "APIData/index_general.json", 'w') as FPtr:
 		dump(generalData, FPtr)
 
-	return (globalData, returnData)
+	return DATA_general

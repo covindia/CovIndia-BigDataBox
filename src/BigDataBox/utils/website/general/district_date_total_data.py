@@ -21,11 +21,19 @@ DIR_DATA = "../data/"
 
 def district_date_total_data(original_data):
 	"""
-		The API function for district-date-total-data. Saves output to DIR_DATA / APIData / district_date_total_data.json
+		The API function for district-date-total-data.
+
+		This returns a JSON that gives all the data of affected districts on all previous dates.
+
+		Function returns (status, list_of_error)
+		1 = All good
+		-1 = Something died
 	"""
 	data = original_data[:]
 	DATA_ddtd = OrderedDict()
 	local_ddtd_total = {}
+
+	failList = []
 
 	# NOTE: By doing this, I have reduced a O(n^2) algo to a O(n) algo.
 	# NOTE to the reader: Attend your algos classes. They help.
@@ -40,6 +48,7 @@ def district_date_total_data(original_data):
 		try:
 			district = row[4]
 		except:
+			failList.append("BigDataBox.utils.website.district_date_total_data.district_date_total_data: district. Could not extract district name {" + row + "}" )
 			continue
 
 		if district == "DIST_NA":
@@ -48,6 +57,7 @@ def district_date_total_data(original_data):
 		try:
 			DateUpdated = str(row[1])
 		except:
+			failList.append("BigDataBox.utils.website.district_date_total_data.district_date_total_data: DateUpdated. Could not extract date updated {" + row + "}" )
 			continue
 
 		if district not in local_ddtd_total:
@@ -71,23 +81,16 @@ def district_date_total_data(original_data):
 			DATA_ddtd[DateUpdated][district]["infected"] += int(row[5])
 			local_ddtd_total[district]["infected"] += int(row[5])
 		except:
-			try:
-				DATA_ddtd[DateUpdated][district]["infected"] += 0
-				local_ddtd_total[district]["infected"] += 0
-			except:
-				DATA_ddtd[DateUpdated][district]["infected"] = 0
-				local_ddtd_total[district]["infected"] = 0
+			DATA_ddtd[DateUpdated][district]["infected"] += 0
+			local_ddtd_total[district]["infected"] += 0
 
 		try:
 			DATA_ddtd[DateUpdated][district]["dead"] += int(row[6])
 			local_ddtd_total[district]["dead"] += int(row[6])
 		except:
-			try:
-				DATA_ddtd[DateUpdated][district]["dead"] += 0
-				local_ddtd_total[district]["dead"] += 0
-			except:
-				DATA_ddtd[DateUpdated][district]["dead"] = 0
-				local_ddtd_total[district]["dead"] = 0
+			DATA_ddtd[DateUpdated][district]["dead"] += 0
+			local_ddtd_total[district]["dead"] += 0
+
 	for date in DATA_ddtd:
 		# find the max value in DATA_ddtd
 		maxINF = 0
@@ -107,5 +110,8 @@ def district_date_total_data(original_data):
 	with open(DIR_DATA + "APIData/district_date_total_data.json", 'w') as FPtr:
 		dump(DATA_ddtd, FPtr)
 
-	return 1
+	if len(failList) != 0:
+		return (-1, failList)
+
+	return (1, failList)
 	# Yeet, Skeet and Repeet

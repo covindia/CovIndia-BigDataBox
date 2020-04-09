@@ -17,7 +17,13 @@ DIR_DATA = "../data/"
 
 def daily_dates(data):
 	"""
-		The API function for daily-dates.  Saves output to DIR_DATA / APIData / daily_date.json
+		The API function for daily-dates.
+
+		This returns a JSON that gives the number of infected people on that day.
+
+		Function returns (status, list_of_error)
+		1 = All good
+		-1 = Something died
 	"""
 	DATA_daily_dates = OrderedDict()
 
@@ -36,6 +42,7 @@ def daily_dates(data):
 
 		cutoff = datetime(2020, 3, 1)
 		if datetime.strptime(date, "%d/%m/%Y") > cutoff:
+
 			# If date already exists in the dictionary
 			if str(date) in DATA_daily_dates:
 				try:
@@ -44,6 +51,7 @@ def daily_dates(data):
 				except:
 					# For cases where row[5] == '' or ""
 					DATA_daily_dates[str(date)] += 0
+
 			# If date doesn't exist in the dictionary, i.e. new date
 			else:
 				try:
@@ -56,4 +64,4 @@ def daily_dates(data):
 	with open(DIR_DATA + "APIData/daily_dates.json", 'w') as FPtr:
 		dump(DATA_daily_dates, FPtr)
 
-	return 1
+	return (1, None)

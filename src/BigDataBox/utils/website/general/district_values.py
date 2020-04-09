@@ -11,16 +11,20 @@ from json import dump
 
 DIR_DATA = "../data/"
 
-def district_values(globalData):
+def district_values(DATA_general):
 	"""
-		The API function for district-values. Saves output to DIR_DATA / APIData / district_values.json
+		The API function for district-values.
+
+		This returns a JSON of real time stats of districts.
+
+		Function returns (status, list_of_error)
+		1 = All good
+		-1 = Something died
 	"""
-	for district in globalData:
-		globalData[district].pop("source", None)
 
 	with open(DIR_DATA + "APIData/district_values.json", 'w') as FPtr:
-		dump(globalData, FPtr)
+		dump(DATA_general, FPtr)
 
-	return 1
+	return (1, None)
 
 	# Yeah, that's it. So what?

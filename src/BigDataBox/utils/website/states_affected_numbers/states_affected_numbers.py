@@ -16,10 +16,16 @@ DIR_DATA = "../data/"
 
 def states_affected_numbers(data):
 	"""
-		The API function for states-affected-numbers. Saves output to DIR_DATA / APIData / states-affected-numbers.json
+		The API function for states-affected-numbers.
+
+		This returns a JSON of the tally of number of infections in each state.
+
+		Function returns (status, list_of_error)
+		1 = All good
+		-1 = Something died
 	"""
-	#print ("WARNING: States_Affected_Numbers is deprecated and no longer supported!")
-	#print ("Instead, use: daily.daily_states")
+
+	failList = []
 
 	DATA_states_affected_number = {}
 	for row in data:
@@ -27,7 +33,8 @@ def states_affected_numbers(data):
 			state = str(row[2])
 		except:
 			print ("extracting state name failed .... {", row, "}")
-			return -1
+			failList.append("BigDataBox.utils.website.state_affected_numbers.state_affected_numbers: stateName. Could not extract state name {" + row + "}" )
+			return (-1 ,failList)
 
 		try:
 			DATA_states_affected_number[state] += int(row[4])
@@ -40,8 +47,7 @@ def states_affected_numbers(data):
 				else:
 					DATA_states_affected_number[state] = int(row[4])
 
-	# UNCOMMENT THIS IF YOU WANT TO STILL USE A DEPRECATED FUNCTION, GODDAMNIT
 	with open(DIR_DATA + "APIData/states_affected_numbers.json", 'w') as FPtr:
 		dump(DATA_states_affected_number, FPtr)
 
-	return 1
+	return (1, None)

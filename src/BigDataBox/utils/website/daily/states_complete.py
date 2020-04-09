@@ -18,8 +18,20 @@ from datetime import datetime
 DIR_DATA = "../data/"
 
 def daily_states_complete(data):
+	"""
+		The API function for daily-states-complete.
+
+		This returns a JSON that gives stats about states today, i.e. number of new cases today vs total number of cases and
+		same with deaths.
+
+		Function returns (status, list_of_error)
+		1 = All good
+		-1 = Something died
+	"""
 	DATA_daily_states_complete = {}
 	baseDate = datetime.combine(datetime.now().date(), datetime.min.time())
+
+	failList = []
 
 	for row in data:
 		try:
@@ -35,6 +47,7 @@ def daily_states_complete(data):
 		try:
 			state = str(row[2])
 		except:
+			failList.append("BigDataBox.utils.website.daily.states_complete: state. Could not extract state name {" + row + "}" )
 			continue
 
 		try:
@@ -69,4 +82,7 @@ def daily_states_complete(data):
 	with open(DIR_DATA + "APIData/daily_states_complete.json", 'w') as FPtr:
 		dump(DATA_daily_states_complete, FPtr)
 
-	return 1
+	if len(failList) != 0:
+		return (-1, failList)
+
+	return (1, None)
