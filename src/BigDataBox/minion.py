@@ -21,6 +21,7 @@ import copy
 # Yes, the minion has it's own slaves to work.
 # I, Cereal God, urge you to go through their code and see their interests.
 # #SlavesLivesMattersAndSoDoTheirInterests
+
 from BigDataBox.utils.website.daily.dates import daily_dates
 from BigDataBox.utils.website.latest_updates.latest_updates import latest_updates_V2
 from BigDataBox.utils.website.general.general import general
@@ -30,9 +31,13 @@ from BigDataBox.utils.website.state_date_total_data.state_date_total_data import
 from BigDataBox.utils.website.states_affected_numbers.states_affected_numbers import states_affected_numbers
 from BigDataBox.utils.website.general.district_date_total_data import district_date_total_data
 
+# Raw-Data
 from BigDataBox.utils.public.covindia.raw_data import raw_data
+# Present-State-Data
 from BigDataBox.utils.public.covindia.state_data import state_data
+# Present-General-Data
 from BigDataBox.utils.public.covindia.general_data import general_data
+# History-District-Data
 from BigDataBox.utils.public.covindia.district_date_data import district_date_data
 
 # Directories
@@ -111,13 +116,13 @@ def do_your_work():
 	print ("Computing covindia-raw-data...")
 	raw_data(data)
 
-	print ("Computing covindia-state_data...")
+	print ("Computing covindia-present-state-data...")
 	state_data(data)
 
-	print ("Computing covindia-general-data...")
+	print ("Computing covindia-present-general-data...")
 	general_data(data)
 
-	print ("Computing covindia-district-date-data...")
+	print ("Computing covindia-history-district-data...")
 	dataCopy = copy.deepcopy(data)
 	district_date_data(dataCopy)
 

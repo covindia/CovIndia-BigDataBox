@@ -72,13 +72,13 @@ def district_date_data(data):
 				DATA_ddtd[DateUpdated][district]["infected"] += 0
 				local_ddtd_total[district]["infected"] += 0
 
-		if not (row[6] == '' or row[6] == ""):
-			try:
-				DATA_ddtd[DateUpdated][district]["death"] += int(row[5])
-				local_ddtd_total[district]["death"] += int(row[5])
-			except:
-				DATA_ddtd[DateUpdated][district]["death"] += 0
-				local_ddtd_total[district]["death"] += 0
+		try:
+			if not (row[6] == '' or row[6] == ""):
+				DATA_ddtd[DateUpdated][district]["death"] += int(row[6])
+				local_ddtd_total[district]["death"] += int(row[6])
+		except:
+			DATA_ddtd[DateUpdated][district]["death"] += 0
+			local_ddtd_total[district]["death"] += 0
 
 	with open(DIR_DATA + "PublicData/covindia_district_date_data.json", 'w') as FPtr:
 		dump(DATA_ddtd, FPtr)
