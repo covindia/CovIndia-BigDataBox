@@ -154,21 +154,21 @@ def donated():
 
 ##### PUBLIC
 
-@app.route('/covindia-district-date-data', methods=['GET'])
+@app.route('/covindia-history-district-data', methods=['GET'])
 def covindia_district_date_data():
 	cdddJSON = {}
 	with open(DIR_DATA + "/PublicData/covindia_district_date_data.json", 'r') as FPtr:
 		cdddJSON = load(FPtr)
 	return jsonify(cdddJSON)
 
-@app.route('/covindia-state-data', methods=['GET'])
+@app.route('/covindia-present-state-data', methods=['GET'])
 def covindia_state_data():
 	csdJSON = {}
 	with open(DIR_DATA + "/PublicData/covindia_state_data.json", 'r') as FPtr:
 		csdJSON = load(FPtr)
 	return jsonify(csdJSON)
 
-@app.route('/covindia-general-data', methods=['GET'])
+@app.route('/covindia-present-general-data', methods=['GET'])
 def covindia_general_data():
 	cgdJSON = {}
 	with open(DIR_DATA + "/PublicData/covindia_general_data.json", 'r') as FPtr:
