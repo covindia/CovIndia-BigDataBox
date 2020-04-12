@@ -16,8 +16,34 @@
 from json import dump
 from datetime import datetime
 from collections import OrderedDict
+from math import log10
 
 DIR_DATA = "../data/"
+
+def decibel(X):
+	"""
+		Utility Function of a Utility Function to calculate:
+			returns 10.0 * log (base 10) (X)
+	"""
+	if X == 0:
+		return 0
+	if X == 1:
+		return 0.000001
+	return (10.0 * log10 (X))
+
+def inverse_decibel(X, split_number):
+	"""
+		The inverse of the decibel function. I.e., if you know the db value
+		and you want to calculate the number that gives you the db value.
+
+		args:
+			X (float) : The Decibel
+			split_number (float) : The number splits wanted in the legend
+
+		returns:
+			inv_dec (int) : The inverse_decibel value
+	"""
+	return int(10 ** (X / (10 * split_number)))
 
 def district_date_total_data(original_data):
 	"""
@@ -48,16 +74,13 @@ def district_date_total_data(original_data):
 		try:
 			district = row[4]
 		except:
-			failList.append("BigDataBox.utils.website.district_date_total_data.district_date_total_data: district. Could not extract district name {" + row + "}" )
-			continue
-
-		if district == "DIST_NA":
+			failList.append("BigDataBox.utils.website.district_date_total_data.district_date_total_data: district. Could not extract district name {" + str(row) + "}" )
 			continue
 
 		try:
 			DateUpdated = str(row[1])
 		except:
-			failList.append("BigDataBox.utils.website.district_date_total_data.district_date_total_data: DateUpdated. Could not extract date updated {" + row + "}" )
+			failList.append("BigDataBox.utils.website.district_date_total_data.district_date_total_data: DateUpdated. Could not extract date updated {" + str(row) + "}" )
 			continue
 
 		if district not in local_ddtd_total:
@@ -95,17 +118,49 @@ def district_date_total_data(original_data):
 		# find the max value in DATA_ddtd
 		maxINF = 0
 		totalINF = 0
+
+		# For now, value is calculated as decibels.
+		#
+		# It was previously linear which had the problem with an outlier (with a very high infected number).
+		# It diminished the value of other districts.
+
+		# Step 1. Calculate the raw decibels and keep track of the highest
+
+		highestValue = 0
+
 		for district in DATA_ddtd[date]:
+			# Get total infected & max infected
 			totalINF += DATA_ddtd[date][district]["infected"]
 
 			if DATA_ddtd[date][district]["infected"] > maxINF:
 				maxINF = DATA_ddtd[date][district]["infected"]
 
+			# Calculate decibels
+			districtValue = decibel(DATA_ddtd[date][district]["infected"])
+
+			if districtValue > highestValue:
+				highestValue = districtValue
+
+			DATA_ddtd[date][district]["value"] = districtValue
+
+		# Step 2. Make all the values divided by highestValue [To get numbers between 0 & 1]
 		for district in DATA_ddtd[date]:
-			DATA_ddtd[date][district]["value"] = DATA_ddtd[date][district]["infected"] / maxINF
+			DATA_ddtd[date][district]["value"] = DATA_ddtd[date][district]["value"] / highestValue
+
+		# Step 3. Calculate the 2 points that correspond to highestValue/3 and 2*highestValue/3
+		#
+		# If 10 log10 (X1) = highestValue/3
+		# Then X1 = 10 ^ (highestValue/30)
+		#
+		# If 10 log10 (X2) = 2*highestValue/3
+		# Then X2 = 10 ^ (2*highestValue/30)
+
+		X1 = inverse_decibel(1 * highestValue, 3)
+		X2 = inverse_decibel(2 * highestValue, 3)
 
 		DATA_ddtd[date]["total-infected"] = totalINF
 		DATA_ddtd[date]["max-legend-value"] = maxINF
+		DATA_ddtd[date]["splitPoints"] = [1, X1, X2, maxINF]
 
 	with open(DIR_DATA + "APIData/district_date_total_data.json", 'w') as FPtr:
 		dump(DATA_ddtd, FPtr)

@@ -112,6 +112,8 @@ def do_your_work():
 
 	print (FAILLIST)
 
+	# TODO: Handle faillist and send it to overlord
+
 	print ("Public:")
 	print ("Computing covindia-raw-data...")
 	raw_data(data)

@@ -14,8 +14,34 @@ from json import dump
 from pandas import read_html
 from bs4 import BeautifulSoup as bs
 from requests import get
+from math import log10
 
 DIR_DATA = "../data/"
+
+def decibel(X):
+	"""
+		Utility Function of a Utility Function to calculate:
+			returns 10.0 * log (base 10) (X)
+	"""
+	if X == 0:
+		return 0
+	if X == 1:
+		return 0.000001
+	return (10.0 * log10 (X))
+
+def inverse_decibel(X, split_number):
+	"""
+		The inverse of the decibel function. I.e., if you know the db value
+		and you want to calculate the number that gives you the db value.
+
+		args:
+			X (float) : The Decibel
+			split_number (float) : The number splits wanted in the legend
+
+		returns:
+			inv_dec (int) : The inverse_decibel value
+	"""
+	return int(10 ** (X / (10 * split_number)))
 
 def general(data):
 	"""
@@ -154,16 +180,37 @@ def general(data):
 	# Calculate the "value" of each district.
 	# "value" corresponds to the color on the map
 
-	# For now, value is calculated in a linear fashion.
-	# However, an outlier (with a very high infected number) diminishes the value of other districts.
-	# Hence, there are plans to convert this to a:
-	# 	> logarithmic scale where the base is infectedMax to give a number between 0 & 1
-	# 	> decible scale (logarithmic but multiplied)
-	# 	> A vertically stretched sigmoid or arctan function
+	# For now, value is calculated as decibels.
 	#
-	# Suggestions are welcome
+	# It was previously linear which had the problem with an outlier (with a very high infected number).
+	# It diminished the value of other districts.
+
+	# Step 1. Calculate the raw decibels and keep track of the highest
+
+	highestValue = 0
+
 	for district in DATA_general:
-		DATA_general[district]["value"] = DATA_general[district]["infected"] / infectedMax
+		districtValue = decibel(DATA_general[district]["infected"])
+
+		if districtValue > highestValue:
+			highestValue = districtValue
+
+		DATA_general[district]["value"] = districtValue
+
+	# Step 2. Make all the values divided by highestValue [To get numbers between 0 & 1]
+	for district in DATA_general:
+		DATA_general[district]["value"] = DATA_general[district]["value"] / highestValue
+
+	# Step 3. Calculate the 2 points that correspond to highestValue/3 and 2*highestValue/3
+	#
+	# If 10 log10 (X1) = highestValue/3
+	# Then X1 = 10 ^ (highestValue/30)
+	#
+	# If 10 log10 (X2) = 2*highestValue/3
+	# Then X2 = 10 ^ (2*highestValue/30)
+
+	X1 = inverse_decibel(1 * highestValue, 3)
+	X2 = inverse_decibel(2 * highestValue, 3)
 
 	# api.covindia.com/general
 	generalData = {
@@ -172,6 +219,7 @@ def general(data):
 		"infectedTotal" : int(infectedTotal),
 		"infectedMax" : int(infectedMax),
 		"lastUpdatedTime" : str(datetime.now()),
+		"splitPoints" : [1, X1, X2, int(infectedMax)],
 		"statesList" : statesAffected,
 		"totalCured" : int(TotalCured)
 	}
