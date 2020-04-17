@@ -15,7 +15,9 @@ def zone_data():
 	"""
 	allData = {}
 
-	with open('district_zones.csv', 'r') as file:
+	# State, District Name, Value
+	# row[0], row[1],	row[2]
+	with open('res/district_zones.csv', 'r') as file:
 		reader = csv.reader(file)
 		rowCount = False
 		for row in reader:
@@ -32,3 +34,5 @@ def zone_data():
 	
 	with open(DIR_DATA + "APIData/zone_data.json", 'w') as FPtr:
 		dump(allData, FPtr)
+
+	return 1
