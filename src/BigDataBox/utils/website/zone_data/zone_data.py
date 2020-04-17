@@ -7,7 +7,7 @@ from json import dump
 
 DIR_DATA = "../data/"
 
-def zone_data():
+def zone_data(testing : bool = None):
 	"""
 		The API for all the zones in India
 
@@ -31,8 +31,9 @@ def zone_data():
 				allData[district] = {}
 				allData[district]["state"] = state
 				allData[district]["value"] = value
-	
-	with open(DIR_DATA + "APIData/zone_data.json", 'w') as FPtr:
-		dump(allData, FPtr)
+
+	if not testing:
+		with open(DIR_DATA + "APIData/zone_data.json", 'w') as FPtr:
+			dump(allData, FPtr)
 
 	return 1
