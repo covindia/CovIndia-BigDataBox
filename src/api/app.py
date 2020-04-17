@@ -81,6 +81,13 @@ def district_date_total_data():
 		ddtdJSON = load(FPtr)
 	return jsonify(ddtdJSON)
 
+@app.route('/zone-data', methods=['GET'])
+def zone_data():
+	zdDATA = {}
+	with open(DIR_DATA + "/APIData/zone_data.json", 'r') as FPtr:
+		zdDATA = load(FPtr)
+	return jsonify(zdDATA)
+
 @app.route('/report-numbers', methods=['GET', 'POST'])
 @limiter.limit("1 per 10 seconds")
 def report_numbers():

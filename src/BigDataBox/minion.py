@@ -30,6 +30,7 @@ from BigDataBox.utils.website.daily.states_complete import daily_states_complete
 from BigDataBox.utils.website.state_date_total_data.state_date_total_data import state_date_total_data
 from BigDataBox.utils.website.states_affected_numbers.states_affected_numbers import states_affected_numbers
 from BigDataBox.utils.website.general.district_date_total_data import district_date_total_data
+from BigDataBox.utils.website.zone_data.zone_data import zone_data
 
 # Raw-Data
 from BigDataBox.utils.public.covindia.raw_data import raw_data
@@ -146,6 +147,9 @@ def do_your_work(testing : bool = None):
 
 	if flag == -1:
 		FAILLIST.append(i for i in failList)
+
+	print ("Computing zone-data")
+	zone_data(testing)
 
 	print ("\nPublic:")
 	print ("Computing covindia-raw-data...")
