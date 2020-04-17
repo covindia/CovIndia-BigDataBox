@@ -14,7 +14,7 @@ from json import dump, load
 
 DIR_DATA = "../data/"
 
-def state_date_total_data(data):
+def state_date_total_data(data, testing : bool = None):
 	"""
 		API function for state-date-total-data.
 
@@ -63,8 +63,9 @@ def state_date_total_data(data):
 				DATA_sdtd[dateKey][stateName] = 0
 		DATA_sdtd[DateUpdated][stateName] += infected
 		
-	with open(DIR_DATA + "APIData/state_date_total_data.json", 'w') as FPtr:
-		dump(DATA_sdtd, FPtr)
+	if not testing:
+		with open(DIR_DATA + "APIData/state_date_total_data.json", 'w') as FPtr:
+			dump(DATA_sdtd, FPtr)
 
 	if len(failList) != 0:
 		return (-1, failList)

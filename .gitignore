@@ -5,6 +5,8 @@ node_modules
 API/URL
 API/*.json
 API/cachedBoi/*
+
+res/*
 res/*.json
 res/URL
 res/assets/*

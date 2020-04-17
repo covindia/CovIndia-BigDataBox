@@ -20,7 +20,7 @@ from requests import get
 
 DIR_DATA = "../data/"
 
-def general_data(data):
+def general_data(data, testing : bool = True):
 	"""
 		The API function for general data. Saves output to DIR_DATA / PublicData / covindia_general_data.json
 	"""
@@ -176,7 +176,8 @@ def general_data(data):
 		"totalCured" : int(TotalCured)
 	}
 
-	with open(DIR_DATA + "PublicData/covindia_general_data.json", 'w') as FPtr:
-		dump(generalData, FPtr)
+	if not testing:
+		with open(DIR_DATA + "PublicData/covindia_general_data.json", 'w') as FPtr:
+			dump(generalData, FPtr)
 
 	return 1

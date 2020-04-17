@@ -16,7 +16,7 @@ from collections import OrderedDict
 
 DIR_DATA = "../data/"
 
-def district_date_data(data):
+def district_date_data(data, testing : bool = None):
 	"""
 		The API function for covindia-district-date-data. Saves output to DIR_DATA / PublicData / covindia_district_date_data.json
 	"""
@@ -80,7 +80,8 @@ def district_date_data(data):
 			DATA_ddtd[DateUpdated][district]["death"] += 0
 			local_ddtd_total[district]["death"] += 0
 
-	with open(DIR_DATA + "PublicData/covindia_district_date_data.json", 'w') as FPtr:
-		dump(DATA_ddtd, FPtr)
+	if not testing:
+		with open(DIR_DATA + "PublicData/covindia_district_date_data.json", 'w') as FPtr:
+			dump(DATA_ddtd, FPtr)
 
 	return 1

@@ -11,7 +11,7 @@ from json import dump
 
 DIR_DATA = "../data/"
 
-def district_values(DATA_general):
+def district_values(DATA_general, testing : bool = None):
 	"""
 		The API function for district-values.
 
@@ -22,8 +22,9 @@ def district_values(DATA_general):
 		-1 = Something died
 	"""
 
-	with open(DIR_DATA + "APIData/district_values.json", 'w') as FPtr:
-		dump(DATA_general, FPtr)
+	if not testing:
+		with open(DIR_DATA + "APIData/district_values.json", 'w') as FPtr:
+			dump(DATA_general, FPtr)
 
 	return (1, None)
 

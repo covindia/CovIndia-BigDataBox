@@ -17,7 +17,7 @@ from datetime import datetime
 
 DIR_DATA = "../data/"
 
-def daily_states_complete(data):
+def daily_states_complete(data, testing : bool = None):
 	"""
 		The API function for daily-states-complete.
 
@@ -79,8 +79,9 @@ def daily_states_complete(data):
 			DATA_daily_states_complete[state]["NewCases"] += infected
 			DATA_daily_states_complete[state]["NewDeaths"] += dead
 
-	with open(DIR_DATA + "APIData/daily_states_complete.json", 'w') as FPtr:
-		dump(DATA_daily_states_complete, FPtr)
+	if not testing:
+		with open(DIR_DATA + "APIData/daily_states_complete.json", 'w') as FPtr:
+			dump(DATA_daily_states_complete, FPtr)
 
 	if len(failList) != 0:
 		return (-1, failList)

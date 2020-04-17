@@ -16,7 +16,7 @@ from json import dump, load
 
 DIR_DATA = "../data/"
 
-def latest_updates_V2(data, number_of_latest_updates):
+def latest_updates_V2(data, number_of_latest_updates, testing : bool = None):
 	"""
 		The API function for latest-updates
 
@@ -94,8 +94,9 @@ def latest_updates_V2(data, number_of_latest_updates):
 		DATA_latest_updates[str(count)] = display_string
 		count += 1
 
-	with open(DIR_DATA + "APIData/latest_updates.json", 'w') as FPtr:
-		dump(DATA_latest_updates, FPtr)
+	if not testing:
+		with open(DIR_DATA + "APIData/latest_updates.json", 'w') as FPtr:
+			dump(DATA_latest_updates, FPtr)
 
 	if len(failList) != 0:
 		return (-1, failList)

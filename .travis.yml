@@ -6,10 +6,9 @@ language: python
 
 python:
   - "3.6.9"
-  - "pypy3"
 
 install:
   pip3 install -r requirements.txt
 
 script:
-  python3 src/BigDataBox/minion.py --testing-travis-ci
+  python3 src/test.py

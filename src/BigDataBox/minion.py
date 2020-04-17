@@ -16,7 +16,6 @@ import copy
 import gspread
 from json import dump, load
 from datetime import datetime
-from argparse import ArgumentParser
 from oauth2client.service_account import ServiceAccountCredentials
 
 # Yes, the minion has it's own slaves to work.
@@ -41,23 +40,18 @@ from BigDataBox.utils.public.covindia.general_data import general_data
 # History-District-Data
 from BigDataBox.utils.public.covindia.district_date_data import district_date_data
 
-parser = ArgumentParser(description="Minion - Overlord's Minion that computes all the values for the website.")
-parser.add_argument("--testing-travis-ci", '-test-tci', action="store_true", help="a flag for Travis CI to build without fetching data")
-
-args = parser.parse_args()
-
 # Directories
 DIR_DATA = "../data/"
 DIR_RES = "res/"
 DIR_PRODUCTION = "live/"
 
-def do_your_work():
+def do_your_work(testing : bool = None):
 	"""
 		Get the damn data from our google sheet and crunch these numbers.
 		Store the numbers in your DIR_DATA, slave.
 	"""
 
-	if testing_travis_ci:
+	if testing == True:
 		# Sample Data
 		data = [
 			['Date', 'Time', 'State', 'District', 'confirmed +ve', 'Dead', 'Source link'], 
@@ -108,68 +102,67 @@ def do_your_work():
 
 	print ("Computing daily-dates...")
 	dataCopy = copy.deepcopy(data)
-	flag, failList = daily_dates(dataCopy)
+	flag, failList = daily_dates(dataCopy, testing)
 
 	if flag == -1:
 		FAILLIST.append(i for i in failList)
 
 	print ("Computing daily-states-complete...")
-	flag, failList = daily_states_complete(data)
+	flag, failList = daily_states_complete(data, testing)
 
 	if flag == -1:
 		FAILLIST.append(i for i in failList)
 
 	print ("Computing general...")
-	DATA_general = general(data)
+	DATA_general = general(data, testing)
 
 	print ("Computing latest-updates...")
-	flag, failList = latest_updates_V2(data, 5)
+	flag, failList = latest_updates_V2(data, 5, testing)
 
 	if flag == -1:
 		FAILLIST.append(i for i in failList)
 
 	print ("Computing district-values...")
-	flag, failList = district_values(DATA_general)
+	flag, failList = district_values(DATA_general, testing)
 
 	if flag == -1:
 		FAILLIST.append(i for i in failList)
 
 	print ("Computing state-date-total-data...")
-	flag, failList = state_date_total_data(data)
+	flag, failList = state_date_total_data(data, testing)
 
 	if flag == -1:
 		FAILLIST.append(i for i in failList)
 
 	print ("Computing states-affected-numbers...")
-	flag, failList = states_affected_numbers(data)
+	flag, failList = states_affected_numbers(data, testing)
 
 	if flag == -1:
 		FAILLIST.append(i for i in failList)
 
 	print ("Computing district-date-total-data...")
 	dataCopy = copy.deepcopy(data)
-	flag, failList = district_date_total_data(dataCopy)
+	flag, failList = district_date_total_data(dataCopy, testing)
 
 	if flag == -1:
 		FAILLIST.append(i for i in failList)
 
-	print (FAILLIST)
-
-	# TODO: Handle faillist and send it to overlord
-
-	print ("Public:")
+	print ("\nPublic:")
 	print ("Computing covindia-raw-data...")
-	raw_data(data)
+	raw_data(data, testing)
 
 	print ("Computing covindia-present-state-data...")
-	state_data(data)
+	state_data(data, testing)
 
 	print ("Computing covindia-present-general-data...")
-	general_data(data)
+	general_data(data, testing)
 
 	print ("Computing covindia-history-district-data...")
 	dataCopy = copy.deepcopy(data)
-	district_date_data(dataCopy)
+	district_date_data(dataCopy, testing)
+
+	print ("\nFaillist:", FAILLIST)
+	# TODO: Handle faillist and send it to overlord
 
 if __name__ == "__main__":
 	do_your_work()

@@ -15,7 +15,7 @@ from collections import OrderedDict
 
 DIR_DATA = "../data/"
 
-def raw_data(data):
+def raw_data(data, testing : bool = None):
 	"""
 		The API function for raw-data. Saves output to DIR_DATA / PublicData / covindia_raw_data.json
 	"""
@@ -73,7 +73,8 @@ def raw_data(data):
 		DATA_rd[counter] = localDict
 		counter += 1
 
-	with open(DIR_DATA + "PublicData/covindia_raw_data.json", 'w') as FPtr:
-		dump(DATA_rd, FPtr)
+	if not testing:
+		with open(DIR_DATA + "PublicData/covindia_raw_data.json", 'w') as FPtr:
+			dump(DATA_rd, FPtr)
 
 	return 1

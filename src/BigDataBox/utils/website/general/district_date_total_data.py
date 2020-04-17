@@ -45,7 +45,7 @@ def inverse_decibel(X, split_number):
 	"""
 	return int(10 ** (X / (10 * split_number)))
 
-def district_date_total_data(original_data):
+def district_date_total_data(original_data, testing : bool = None):
 	"""
 		The API function for district-date-total-data.
 
@@ -162,8 +162,9 @@ def district_date_total_data(original_data):
 		DATA_ddtd[date]["max-legend-value"] = maxINF
 		DATA_ddtd[date]["splitPoints"] = [1, X1, X2, maxINF]
 
-	with open(DIR_DATA + "APIData/district_date_total_data.json", 'w') as FPtr:
-		dump(DATA_ddtd, FPtr)
+	if not testing:
+		with open(DIR_DATA + "APIData/district_date_total_data.json", 'w') as FPtr:
+			dump(DATA_ddtd, FPtr)
 
 	if len(failList) != 0:
 		return (-1, failList)

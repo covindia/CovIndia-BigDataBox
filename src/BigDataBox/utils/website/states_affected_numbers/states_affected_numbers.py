@@ -14,7 +14,7 @@ from json import dump
 
 DIR_DATA = "../data/"
 
-def states_affected_numbers(data):
+def states_affected_numbers(data, testing : bool = None):
 	"""
 		The API function for states-affected-numbers.
 
@@ -47,7 +47,8 @@ def states_affected_numbers(data):
 				else:
 					DATA_states_affected_number[state] = int(row[4])
 
-	with open(DIR_DATA + "APIData/states_affected_numbers.json", 'w') as FPtr:
-		dump(DATA_states_affected_number, FPtr)
+	if not testing:
+		with open(DIR_DATA + "APIData/states_affected_numbers.json", 'w') as FPtr:
+			dump(DATA_states_affected_number, FPtr)
 
 	return (1, None)

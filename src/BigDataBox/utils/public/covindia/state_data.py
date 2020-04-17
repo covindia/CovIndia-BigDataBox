@@ -14,7 +14,7 @@ from json import dump
 
 DIR_DATA = "../data/"
 
-def state_data(data):
+def state_data(data, testing : bool = None):
 	"""
 		The API function for state-data. Saves output to DIR_DATA / PublicData / covindia_state_data.json
 	"""
@@ -35,8 +35,8 @@ def state_data(data):
 		except:
 			pass
 
-	# UNCOMMENT THIS IF YOU WANT TO STILL USE A DEPRECATED FUNCTION, GODDAMNIT
-	with open(DIR_DATA + "PublicData/covindia_state_data.json", 'w') as FPtr:
-		dump(DATA_sd, FPtr)
+	if not testing:
+		with open(DIR_DATA + "PublicData/covindia_state_data.json", 'w') as FPtr:
+			dump(DATA_sd, FPtr)
 
 	return 1

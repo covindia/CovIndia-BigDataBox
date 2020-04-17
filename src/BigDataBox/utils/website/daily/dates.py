@@ -15,7 +15,7 @@ from collections import OrderedDict
 
 DIR_DATA = "../data/"
 
-def daily_dates(data):
+def daily_dates(data, testing : bool = None):
 	"""
 		The API function for daily-dates.
 
@@ -61,7 +61,8 @@ def daily_dates(data):
 					# For cases where row[5] == '' or ""
 					DATA_daily_dates[str(date)] = 0
 
-	with open(DIR_DATA + "APIData/daily_dates.json", 'w') as FPtr:
-		dump(DATA_daily_dates, FPtr)
+	if not testing:
+		with open(DIR_DATA + "APIData/daily_dates.json", 'w') as FPtr:
+			dump(DATA_daily_dates, FPtr)
 
 	return (1, None)

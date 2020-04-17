@@ -43,7 +43,7 @@ def inverse_decibel(X, split_number):
 	"""
 	return int(10 ** (X / (10 * split_number)))
 
-def general(data):
+def general(data, testing : bool = None):
 	"""
 		The API function for general.
 
@@ -224,7 +224,8 @@ def general(data):
 		"totalCured" : int(TotalCured)
 	}
 
-	with open(DIR_DATA + "APIData/index_general.json", 'w') as FPtr:
-		dump(generalData, FPtr)
+	if not testing:
+		with open(DIR_DATA + "APIData/index_general.json", 'w') as FPtr:
+			dump(generalData, FPtr)
 
 	return DATA_general
