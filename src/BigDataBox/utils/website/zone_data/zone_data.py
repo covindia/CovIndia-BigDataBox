@@ -1,3 +1,7 @@
+"""
+	Author: Srikar
+"""
+
 import csv
 from json import dump
 
@@ -13,14 +17,18 @@ def zone_data():
 
 	with open('district_zones.csv', 'r') as file:
 		reader = csv.reader(file)
+		rowCount = False
 		for row in reader:
-			stateBoi = row[0]
-			districtBoi = row[1]
+			if(not rowCount):
+				rowCount = not rowCount
+				continue
+			state = row[0]
+			district = row[1]
 			value = int(row[2])
-			if(districtBoi not in allData):
-				allData[districtBoi] = {}
-				allData[districtBoi]["state"] = stateBoi
-				allData[districtBoi]["value"] = value
-
+			if(district not in allData):
+				allData[district] = {}
+				allData[district]["state"] = state
+				allData[district]["value"] = value
+	
 	with open(DIR_DATA + "APIData/zone_data.json", 'w') as FPtr:
 		dump(allData, FPtr)
