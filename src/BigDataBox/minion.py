@@ -170,7 +170,7 @@ def do_your_work(testing : bool = None):
 	print ("Computing past-n-days...")
 	past_n_days(testing)
 
-	print ("\nFaillist:", FAILLIST
+	print ("\nFaillist:", FAILLIST)
 	# TODO: Handle faillist and send it to overlord
 
 if __name__ == "__main__":
