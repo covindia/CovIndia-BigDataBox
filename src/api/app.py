@@ -88,6 +88,20 @@ def zone_data():
 		zdDATA = load(FPtr)
 	return jsonify(zdDATA)
 
+@app.route('/past-twenty-four-hours', methods=['GET'])
+def past_twenty_four_hours():
+	ptfhDATA = {}
+	with open(DIR_DATA + "/APIData/past_twenty_four_hours.json", 'r') as FPtr:
+		ptfhDATA = load(FPtr)
+	return jsonify(ptfhDATA)
+
+@app.route('/past-two-weeks', methods=['GET'])
+def past_two_weeks():
+	ptwDATA = {}
+	with open(DIR_DATA + "/APIData/past_two_weeks.json", 'r') as FPtr:
+		ptwDATA = load(FPtr)
+	return jsonify(ptwDATA)
+
 @app.route('/report-numbers', methods=['GET', 'POST'])
 @limiter.limit("1 per 10 seconds")
 def report_numbers():
