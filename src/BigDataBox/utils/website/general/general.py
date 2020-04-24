@@ -52,8 +52,16 @@ def general(data, testing : bool = None):
 
 		Function returns DATA_general, to be used by general.district_values
 	"""
-	infectedTotal = 0
+
+	deadMax = 0
 	deadTotal = 0
+	deadToday = 0
+	infectedMax = 0
+	infectedToday = 0
+	infectedTotal = 0
+
+	dateToday = datetime.today().date()
+
 	DATA_general = {}
 
 	for row in data:
@@ -84,6 +92,20 @@ def general(data, testing : bool = None):
 		except:
 			DateUpdated = datetime.now().strftime("%d/%m/%Y")
 
+		# This cannot be in a try ... except. We need to know if anything was entered wrong.
+		DateUpdated = datetime.strptime(DateUpdated, "%d/%m/%Y").date()
+
+		# Today's Statistics
+		if DateUpdated == dateToday:
+			try:
+				deadToday += int(row[5])
+			except:
+				pass
+			try:
+				infectedToday += int(row[4])
+			except:
+				pass
+
 		# District already doesn't have an entry in DATA_general
 		if district not in DATA_general:
 			DATA_general[district] = {
@@ -110,9 +132,6 @@ def general(data, testing : bool = None):
 			DATA_general[district]["state"] = str(row[2])
 		except:
 			pass
-
-	infectedMax = 0
-	deadMax = 0
 
 	districtsAffected = [] # List of districts with infected people
 	statesAffected = [] # List of states with infected people
@@ -214,10 +233,12 @@ def general(data, testing : bool = None):
 
 	# api.covindia.com/general
 	generalData = {
+		"deadToday" : int(deadToday),
 		"deathTotal" : int(deadTotal),
 		"districtList" : districtsAffected,
 		"infectedTotal" : int(infectedTotal),
 		"infectedMax" : int(infectedMax),
+		"infectedToday" : int(infectedToday),
 		"lastUpdatedTime" : str(datetime.now()),
 		"splitPoints" : [1, X1, X2, int(infectedMax)],
 		"statesList" : statesAffected,
