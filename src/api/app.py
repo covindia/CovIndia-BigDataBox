@@ -102,6 +102,13 @@ def past_two_weeks():
 		ptwDATA = load(FPtr)
 	return jsonify(ptwDATA)
 
+@app.route('/testing-data', methods=['GET'])
+def testing_data():
+	testingDATA = {}
+	with open(DIR_DATA + "/APIData/testing_data.json", 'r') as FPtr:
+		testingDATA = load(FPtr)
+	return jsonify(testingDATA)
+
 @app.route('/report-numbers', methods=['GET', 'POST'])
 @limiter.limit("1 per 10 seconds")
 def report_numbers():
