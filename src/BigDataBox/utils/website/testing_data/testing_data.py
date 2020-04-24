@@ -36,7 +36,7 @@ def testing_data(testing : bool = None):
 		#testingData[rowNum]["time"] = row[1]
 
 		try:
-			testingData[rowNum]["tested"] = int(row[6])
+			testingData[rowNum]["tested"] = int(row[3])
 		except:
 			testingData[rowNum]["tested"] = "NA"
 		
