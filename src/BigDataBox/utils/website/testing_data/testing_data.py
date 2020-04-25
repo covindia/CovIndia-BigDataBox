@@ -25,30 +25,35 @@ def testing_data(testing : bool = None):
 	data = sheet.get()
 	data = data[1:] # python is soo cool
 	
-	testingData = {} 
+	testingData = {}
+	testingData["date"] = []
+	testingData["tested"] = []
+	testingData["positive"]= []
+	testingData["percentage"] = []
 
 	rowNum = 0
 
 	for row in data:
-		testingData[rowNum] = {}
-		testingData[rowNum]["date"] = row[0]
-
-		#testingData[rowNum]["time"] = row[1]
 
 		try:
-			testingData[rowNum]["tested"] = int(row[3])
+			testingData["date"].append(row[0][:5]) #needed for making fronted's job easier, js is hard, python is cool(again)
 		except:
-			testingData[rowNum]["tested"] = "NA"
+			testingData["date"].append("NA")
+
+		try:
+			testingData["tested"].append(int(row[3]))
+		except:
+			testingData["tested"].append("NA")
 		
 		try:
-			testingData[rowNum]["positive"] = int(row[5])
+			testingData["positive"].append(int(row[5]))
 		except:
-			testingData[rowNum]["positive"] = "NA"
+			testingData["positive"].append("NA")
 
-		try:
-			testingData[rowNum]["percentage"] = round((testingData[rowNum]["positive"]/testingData[rowNum]["tested"]) * 100, 3)
+		try: #without = round, we'll end up having 10 decimal places, nobody wants that.
+			testingData["percentage"].append(round((testingData["positive"][rowNum]/testingData["tested"][rowNum]) * 100, 3))
 		except:
-			testingData[rowNum]["percentage"] = "NA"
+			testingData["percentage"].append("NA")
 		
 		rowNum += 1
 	
