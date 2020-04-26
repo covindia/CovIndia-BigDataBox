@@ -33,6 +33,7 @@ from BigDataBox.utils.website.general.district_date_total_data import district_d
 from BigDataBox.utils.website.zone_data.zone_data import zone_data
 from BigDataBox.utils.website.past_n_days.past_n_days import past_n_days
 from BigDataBox.utils.website.testing_data.testing_data import testing_data
+from BigDataBox.utils.website.cured_data.cured_data import cured_data
 
 # Raw-Data
 from BigDataBox.utils.public.covindia.raw_data import raw_data
@@ -173,6 +174,9 @@ def do_your_work(testing : bool = None):
 
 	print("Computing testing-data")
 	testing_data(testing)
+
+	print("Computing cured-data")
+	cured_data(testing)
 
 	print ("\nFaillist:", FAILLIST)
 	# TODO: Handle faillist and send it to overlord
