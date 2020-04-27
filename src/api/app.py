@@ -116,7 +116,7 @@ def cured_data():
 		curedDATA = load(FPtr)
 	return jsonify(curedDATA)
 
-@app.route('/csv-data') # this is a job for GET, not POST
+@app.route('/csv-historical-state-data', methods=['GET'])
 def plot_csv():
 	return send_file(DIR_DATA + '/APIData/csv_data.csv', mimetype='text/csv', attachment_filename='csv_data.csv', as_attachment=True)
 
