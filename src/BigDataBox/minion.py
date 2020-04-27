@@ -149,6 +149,12 @@ def do_your_work(testing : bool = None):
 	dataCopy = copy.deepcopy(data)
 	flag, failList = district_date_total_data(dataCopy, testing)
 
+	print("Computing testing-data")
+	testing_data(testing)
+
+	print("Computing cured-data")
+	cured_data(testing)
+
 	if flag == -1:
 		FAILLIST.append(i for i in failList)
 
@@ -171,12 +177,6 @@ def do_your_work(testing : bool = None):
 
 	print ("Computing past-n-days...")
 	past_n_days(testing)
-
-	print("Computing testing-data")
-	testing_data(testing)
-
-	print("Computing cured-data")
-	cured_data(testing)
 
 	print ("\nFaillist:", FAILLIST)
 	# TODO: Handle faillist and send it to overlord
