@@ -1,5 +1,5 @@
 import flask
-from flask import jsonify, request, escape
+from flask import jsonify, request, escape, send_file
 from json import load, dump
 from datetime import datetime
 import os
@@ -115,6 +115,10 @@ def cured_data():
 	with open(DIR_DATA + "/APIData/cured_data.json", 'r') as FPtr:
 		curedDATA = load(FPtr)
 	return jsonify(curedDATA)
+
+@app.route('/csv-data') # this is a job for GET, not POST
+def plot_csv():
+	return send_file(DIR_DATA + '/APIData/csv_data.csv', mimetype='text/csv', attachment_filename='csv_data.csv', as_attachment=True)
 
 @app.route('/report-numbers', methods=['GET', 'POST'])
 @limiter.limit("1 per 10 seconds")
