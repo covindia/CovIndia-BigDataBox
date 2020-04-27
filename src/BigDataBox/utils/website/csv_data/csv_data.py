@@ -74,11 +74,13 @@ def csv_data(data, testing : bool = None):
 
 	for state in stateList:
 		isFirst = True
+		sum = 0
 		for date in csvData:
 			if(isFirst):
 				stateArray = [state]
 				isFirst = not isFirst
-			stateArray.append(csvData[date][state]["infected"])
+			sum += csvData[date][state]["infected"]
+			stateArray.append(sum)
 		writeData.append(stateArray)
 
 	if not testing:
