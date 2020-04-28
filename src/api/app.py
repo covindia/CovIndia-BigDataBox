@@ -222,5 +222,5 @@ def covindia_raw_data():
 	return jsonify(crdJSON)
 
 @app.route('/covindia-raw-data-csv', methods=['GET'])
-def covindia_raw_data():
+def covindia_raw_data_csv():
 	return send_file(DIR_DATA + '/PublicData/covindia_raw_data_csv.csv', mimetype='text/csv', attachment_filename='covindia_raw_data.csv', as_attachment=True)
