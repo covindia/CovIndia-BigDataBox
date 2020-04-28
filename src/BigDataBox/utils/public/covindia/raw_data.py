@@ -10,6 +10,7 @@
 """
 
 from json import dump
+from csv import writer
 from datetime import datetime
 from collections import OrderedDict
 
@@ -76,5 +77,18 @@ def raw_data(data, testing : bool = None):
 	if not testing:
 		with open(DIR_DATA + "PublicData/covindia_raw_data.json", 'w') as FPtr:
 			dump(DATA_rd, FPtr)
+
+	if not testing:
+		row_0 = DATA_rd[0]
+
+		
+		with open(DIR_DATA + "PublicData/covindia_raw_data_csv.csv", 'w') as FPtr:
+			Writer = writer(FPtr)
+			header = row_0.keys()
+
+			Writer.writerow(header)
+
+			for row in DATA_rd:
+				Writer.writerow(DATA_rd[row].values())
 
 	return 1
