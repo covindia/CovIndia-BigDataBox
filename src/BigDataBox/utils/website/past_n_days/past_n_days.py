@@ -12,6 +12,18 @@ import math
 
 DIR_DATA = "../data"
 
+def decibel(X):
+	"""
+		Utility Function of a Utility Function to calculate:
+			returns 10.0 * log (base 10) (X)
+	"""
+	if X == 0:
+		return 0
+	if X == 1:
+		return 0.000001
+	return (10.0 * math.log10 (X))
+
+
 def inverse_decibel(X, split_number):
 	"""
 		The inverse of the decibel function. I.e., if you know the db value
@@ -59,15 +71,14 @@ def past_days(days : int, output_file : str):
 	max_infected_db = 10*math.log(df['infected'].max(),10)
 
 	if days != 1:
-		maximum_inf = df['infected'].max()
+		maximum_inf = decibel(df['infected'].max())
 
 		X1 = inverse_decibel(1 * maximum_inf, 3)
 		X2 = inverse_decibel(2 * maximum_inf, 3)
 
-		out["splitPoints"] = [1, X1, X2, maximum_inf]
+		out["splitPoints"] = [1, X1, X2, int(df['infected'].max())]
 
 	for ix in df.index:
-		
 		out[df['district'][ix]] = {}
 		out[df['district'][ix]]['new_infected'] = str(df['infected'][ix])
 		out[df['district'][ix]]['new_deaths'] = str(df['death'][ix])
