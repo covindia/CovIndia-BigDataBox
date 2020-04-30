@@ -12,6 +12,20 @@ import math
 
 DIR_DATA = "../data"
 
+def inverse_decibel(X, split_number):
+	"""
+		The inverse of the decibel function. I.e., if you know the db value
+		and you want to calculate the number that gives you the db value.
+
+		args:
+			X (float) : The Decibel
+			split_number (float) : The number splits wanted in the legend
+
+		returns:
+			inv_dec (int) : The inverse_decibel value
+	"""
+	return int(10 ** (X / (10 * split_number)))
+
 def past_n_days(testing):
 	if testing:
 		return 1
@@ -43,6 +57,15 @@ def past_days(days : int, output_file : str):
 
 	out = {}
 	max_infected_db = 10*math.log(df['infected'].max(),10)
+
+	if days != 1:
+		maximum_inf = df['infected'].max()
+
+		X1 = inverse_decibel(1 * maximum_inf, 3)
+		X2 = inverse_decibel(2 * maximum_inf, 3)
+
+		out["splitPoints"] = [1, X1, X2, maximum_inf]
+
 	for ix in df.index:
 		
 		out[df['district'][ix]] = {}
