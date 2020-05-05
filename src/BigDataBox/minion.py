@@ -31,7 +31,7 @@ from BigDataBox.utils.website.history.states_infected import states_infected as 
 from BigDataBox.utils.website.present.states_infected import states_infected as present_states_infected
 from BigDataBox.utils.website.history.districts_values import districts_values
 from BigDataBox.utils.website.present.zones import zones as present_zones
-from BigDataBox.utils.website.past_n_days.past_n_days import past_n_days
+from BigDataBox.utils.website.history.twenty_four_hours import twenty_four_hours as history_twenty_four_hours
 from BigDataBox.utils.website.history.testing import testing as history_testing
 from BigDataBox.utils.website.present.cured_tested_values import cured_tested_values as present_cured_tested_values
 from BigDataBox.utils.website.csv.history.states_infected import states_infected as csv_history_states_infected
@@ -108,31 +108,39 @@ def do_your_work(testing : bool = None):
 	dataCopy = copy.deepcopy(data_new)
 	flag, failList = districts_values(dataCopy, testing)
 
-	print("Computing history-testing")
+	print ("Computing history-twenty-four-hours...")
+	history_twenty_four_hours(data_new, testing)
+
+	print("Computing history-testing...")
 	history_testing(data_testing, testing)
 
-	print("Computing present-cured-tested-values")
+	print("Computing present-cured-tested-values...")
 	present_cured_tested_values(data_cured, testing)
 
-	print ("Computing present-zones")
+	print ("Computing present-zones...")
 	present_zones(testing)
 
-	print ("\nPublic:")
-	print ("Computing covindia-raw-data...")
-	raw_data(data, testing)
+	#####################
+	# PUBLIC API IS ON A HOLD UNTIL IT CAN BE FIGURED OUT WHAT TO BE DONE
+	#####################
 
-	print ("Computing covindia-present-state-data...")
-	state_data(data, testing)
+	# print ("\nPublic:")
+	# print ("Computing covindia-raw-data...")
+	# raw_data(data, testing)
 
-	print ("Computing covindia-present-general-data...")
-	general_data(data, testing)
+	# print ("Computing covindia-present-state-data...")
+	# state_data(data, testing)
 
-	print ("Computing covindia-history-district-data...")
-	dataCopy = copy.deepcopy(data)
-	district_date_data(dataCopy, testing)
+	# print ("Computing covindia-present-general-data...")
+	# general_data(data, testing)
 
-	print ("Computing past-n-days...")
-	past_n_days(testing)
+	# print ("Computing covindia-history-district-data...")
+	# dataCopy = copy.deepcopy(data)
+	# district_date_data(dataCopy, testing)
+
+	#####################
+	# PUBLIC API ENDS HERE
+	#####################
 
 	print ("\nFaillist:", FAILLIST)
 	# TODO: Handle faillist and send it to overlord

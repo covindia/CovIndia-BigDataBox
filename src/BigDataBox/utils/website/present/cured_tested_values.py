@@ -74,5 +74,5 @@ def cured_tested_values(data_cured, testing : bool = None):
 				except:
 					pass
 
-	with open(DIR_DATA + "APIData/presesnt_cured_tested_values.json", 'w') as FPtr:
+	with open(DIR_DATA + "APIData/present_cured_tested_values.json", 'w') as FPtr:
 		dump(DATA_cured, FPtr)
