@@ -15,7 +15,7 @@ from collections import OrderedDict
 
 DIR_DATA = "../data/"
 
-def daily_dates(data, testing : bool = None):
+def daily_dates(data_old_sheet, testing : bool = None):
 	"""
 		The API function for daily-dates.
 
@@ -27,17 +27,19 @@ def daily_dates(data, testing : bool = None):
 	"""
 	DATA_daily_dates = OrderedDict()
 
+	dateToday = datetime.today().date()
+
 	# NOTE: By doing this, I have reduced a O(n^2) algo to a O(n) algo.
 	# NOTE to the reader: Attend your algos classes. They help.
-	for row in data:
+	for row in data_old_sheet:
 		Date = datetime.strptime(str(row[0]), "%d/%m/%Y")
-
-		row.insert(0, Date)
+		if Date.date() != dateToday:
+			row.insert(0, Date)
 
 	# However, sorting is still a O(n*log(n)), so overall complexity remains to be O(n*log(n))
-	data.sort()
+	data_old_sheet.sort()
 
-	for row in data:
+	for row in data_old_sheet:
 		date = str(row[1])
 
 		cutoff = datetime(2020, 3, 1)
