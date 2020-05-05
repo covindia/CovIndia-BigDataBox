@@ -60,6 +60,7 @@ from BigDataBox.utils.website.csv.history.states_infected import states_infected
 DIR_DATA = "../data/"
 DIR_RES = "res/"
 DIR_PRODUCTION = "live/"
+DIR_TESTS = "tests/"
 
 def do_your_work(testing : bool = None):
 	"""
@@ -67,21 +68,50 @@ def do_your_work(testing : bool = None):
 		Store the numbers in your DIR_DATA, slave.
 	"""
 
-	scope = ['https://spreadsheets.google.com/feeds']
-	creds = ServiceAccountCredentials.from_json_keyfile_name(DIR_RES + 'creds.json',scope)
-	client = gspread.authorize(creds)
-	with open(DIR_RES + "URLS.json", 'r') as F:
-		urls = load(F)
-	sheet_old = client.open_by_url(urls['Old-Sheet']).worksheet('Sheet1')
-	sheet_new = client.open_by_url(urls['New-Sheet']).worksheet('Sheet1')
-	sheet_cured = client.open_by_url(urls['Cured']).worksheet('Sheet1')
-	sheet_testing = client.open_by_url(urls['Testing']).worksheet('Sheet1')
+	if testing:
+		data_old = []
+		data_new = []
+		data_cured = []
+		data_testing = []
 
-	print ("Pinging Sheets...")
-	data_old = sheet_old.get()
-	data_new = sheet_new.get()
-	data_cured = sheet_cured.get()
-	data_testing = sheet_testing.get()
+		import csv
+
+		with open(DIR_TESTS + "sheet_old.csv", 'r') as F:
+			reader = csv.reader(F)
+			for row in reader:
+				data_old.append(row)
+
+		with open(DIR_TESTS + "sheet_new.csv", 'r') as F:
+			reader = csv.reader(F)
+			for row in reader:
+				data_new.append(row)
+
+		with open(DIR_TESTS + "sheet_cured.csv", 'r') as F:
+			reader = csv.reader(F)
+			for row in reader:
+				data_cured.append(row)
+
+		with open(DIR_TESTS + "sheet_testing.csv", 'r') as F:
+			reader = csv.reader(F)
+			for row in reader:
+				data_testing.append(row)
+
+	else:
+		scope = ['https://spreadsheets.google.com/feeds']
+		creds = ServiceAccountCredentials.from_json_keyfile_name(DIR_RES + 'creds.json',scope)
+		client = gspread.authorize(creds)
+		with open(DIR_RES + "URLS.json", 'r') as F:
+			urls = load(F)
+		sheet_old = client.open_by_url(urls['Old-Sheet']).worksheet('Sheet1')
+		sheet_new = client.open_by_url(urls['New-Sheet']).worksheet('Sheet1')
+		sheet_cured = client.open_by_url(urls['Cured']).worksheet('Sheet1')
+		sheet_testing = client.open_by_url(urls['Testing']).worksheet('Sheet1')
+
+		print ("Pinging Sheets...")
+		data_old = sheet_old.get()
+		data_new = sheet_new.get()
+		data_cured = sheet_cured.get()
+		data_testing = sheet_testing.get()
 	
 	# Remove Headers
 	data_old = data_old[1:]
