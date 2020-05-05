@@ -116,6 +116,17 @@ def cured_data():
 		curedDATA = load(FPtr)
 	return jsonify(curedDATA)
 
+@app.route('/table-data', methods=['GET'])
+def table_data():
+	# A mix of daily_states_complete and cured_data
+	tDATA = {}
+	with open(DIR_DATA + "/APIData/daily_states_complete.json", 'r') as FPtr:
+		tDATA = load(FPtr)
+	with open(DIR_DATA + "/APIData/cured_data.json", 'r') as FPtr:
+		curedDATA = load(FPtr))
+		tDATA.update(curedDATA)
+	return jsonify(tDATA)
+
 @app.route('/csv-historical-state-data', methods=['GET'])
 def plot_csv():
 	return send_file(DIR_DATA + '/APIData/csv_data.csv', mimetype='text/csv', attachment_filename='csv_data.csv', as_attachment=True)
