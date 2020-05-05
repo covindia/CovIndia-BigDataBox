@@ -25,10 +25,10 @@ limiter = Limiter(
 def home():
 	return "<a href=\"https://covindia.com\">Click here to go to https://covindia.com</a>. You were not supposed to stumble here.<br><br>But now that you did, hello from us!"
 
-@app.route('/daily-dates', methods=['GET'])
-def daily_dates():
+@app.route('/history-infected-daily', methods=['GET'])
+def history_infected_daily():
 	dailyDates = {}
-	with open(DIR_DATA + "/APIData/daily_dates.json", 'r') as FPtr:
+	with open(DIR_DATA + "/APIData/history_infected_daily.json", 'r') as FPtr:
 		dailyDates = load(FPtr)
 	return jsonify(dailyDates)
 

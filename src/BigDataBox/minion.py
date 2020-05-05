@@ -22,7 +22,7 @@ from oauth2client.service_account import ServiceAccountCredentials
 # I, Cereal God, urge you to go through their code and see their interests.
 # #SlavesLivesMattersAndSoDoTheirInterests
 
-from BigDataBox.utils.website.daily.dates import daily_dates
+from BigDataBox.utils.website.history.infected_daily import infected_daily
 from BigDataBox.utils.website.latest_updates.latest_updates import latest_updates_V2
 from BigDataBox.utils.website.general.general import general
 from BigDataBox.utils.website.general.district_values import district_values
@@ -79,9 +79,9 @@ def do_your_work(testing : bool = None):
 
 	FAILLIST = []
 
-	print ("Computing daily-dates...")
+	print ("Computing history-infected-daily...")
 	dataCopy = copy.deepcopy(data_old)
-	flag, failList = daily_dates(dataCopy, testing)
+	flag, failList = infected_daily(dataCopy, testing)
 
 	print ("Computing daily-states-complete...")
 	flag, failList = daily_states_complete(data, testing)

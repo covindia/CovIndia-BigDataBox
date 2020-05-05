@@ -15,9 +15,9 @@ from collections import OrderedDict
 
 DIR_DATA = "../data/"
 
-def daily_dates(data_old_sheet, testing : bool = None):
+def infected_daily(data_old_sheet, testing : bool = None):
 	"""
-		The API function for daily-dates.
+		The API function for history-infected-daily.
 
 		This returns a JSON that gives the number of infected people on that day.
 
@@ -25,7 +25,7 @@ def daily_dates(data_old_sheet, testing : bool = None):
 		1 = All good
 		-1 = Something died
 	"""
-	DATA_daily_dates = OrderedDict()
+	DATA_history_infected_daily = OrderedDict()
 
 	dateToday = datetime.today().date()
 
@@ -46,25 +46,25 @@ def daily_dates(data_old_sheet, testing : bool = None):
 		if datetime.strptime(date, "%d/%m/%Y") > cutoff:
 
 			# If date already exists in the dictionary
-			if str(date) in DATA_daily_dates:
+			if str(date) in DATA_history_infected_daily:
 				try:
 					# Add the number of cases to the dictionary
-					DATA_daily_dates[str(date)] += int(row[5])
+					DATA_history_infected_daily[str(date)] += int(row[5])
 				except:
 					# For cases where row[5] == '' or ""
-					DATA_daily_dates[str(date)] += 0
+					DATA_history_infected_daily[str(date)] += 0
 
 			# If date doesn't exist in the dictionary, i.e. new date
 			else:
 				try:
 					# Set it to the number inside the cell
-					DATA_daily_dates[str(date)] = int(row[5])
+					DATA_history_infected_daily[str(date)] = int(row[5])
 				except:
 					# For cases where row[5] == '' or ""
-					DATA_daily_dates[str(date)] = 0
+					DATA_history_infected_daily[str(date)] = 0
 
 	if not testing:
-		with open(DIR_DATA + "APIData/daily_dates.json", 'w') as FPtr:
-			dump(DATA_daily_dates, FPtr)
+		with open(DIR_DATA + "APIData/history_infected_daily.json", 'w') as FPtr:
+			dump(DATA_history_infected_daily, FPtr)
 
 	return (1, None)
