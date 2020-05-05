@@ -133,9 +133,10 @@ def table_data():
 			tDATA[state] = curedDATA[state]
 	return jsonify(tDATA)
 
-@app.route('/csv-historical-state-data', methods=['GET'])
+@app.route('/csv-history-states-infected', methods=['GET'])
 def plot_csv():
-	return send_file(DIR_DATA + '/APIData/csv_data.csv', mimetype='text/csv', attachment_filename='csv_data.csv', as_attachment=True)
+	return send_file(DIR_DATA + '/APIData/csv_history_states_infected.csv', mimetype='text/csv',
+		attachment_filename='covindia_history_states_infected.csv', as_attachment=True)
 
 @app.route('/report-numbers', methods=['GET', 'POST'])
 @limiter.limit("1 per 10 seconds")

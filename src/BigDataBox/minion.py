@@ -34,7 +34,7 @@ from BigDataBox.utils.website.zone_data.zone_data import zone_data
 from BigDataBox.utils.website.past_n_days.past_n_days import past_n_days
 from BigDataBox.utils.website.testing_data.testing_data import testing_data
 from BigDataBox.utils.website.cured_data.cured_data import cured_data
-from BigDataBox.utils.website.csv_data.csv_data import csv_data
+from BigDataBox.utils.website.csv.history.states_infected import states_infected as csv_history_states_infected
 
 # Raw-Data
 from BigDataBox.utils.public.covindia.raw_data import raw_data
@@ -101,11 +101,8 @@ def do_your_work(testing : bool = None):
 	print ("Computing present-states-infected...")
 	flag, failList = present_states_infected(data_new, testing)
 
-	if flag == -1:
-		FAILLIST.append(i for i in failList)
-
-	print("Computing csv-data")
-	flag, failList = csv_data(data, testing)
+	print("Computing csv-history-states-infected")
+	flag, failList = csv_history_states_infected(data_old, testing)
 
 	if flag == -1:
 		FAILLIST.append(i for i in failList)

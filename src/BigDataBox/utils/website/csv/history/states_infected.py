@@ -7,10 +7,10 @@ from datetime import datetime
 
 DIR_DATA = "../data/"
 
-def csv_data(data, testing : bool = None):
+def states_infected(data_old, testing : bool = None):
 
 	"""
-		API to make an odered csv of our data for cool visualisations
+		API to make an ordered csv of our data for cool visualisations
 		uses the data from the sheets directy to make the csv
 
 		Function returns (status, list_of_error)
@@ -20,7 +20,7 @@ def csv_data(data, testing : bool = None):
 		TODO : Optimise the function
 	"""
 
-	data.sort(key = lambda x: datetime.strptime(x[0], '%d/%m/%Y'))
+	data_old.sort(key = lambda x: datetime.strptime(x[0], '%d/%m/%Y'))
 
 	csvData = {}
 	stateList = []
@@ -30,7 +30,7 @@ def csv_data(data, testing : bool = None):
 
 	# I'm pretty sure there's a more optimised version of doing this with  a smaller O(), smh I'm a noob
 
-	for row in data:
+	for row in data_old:
 
 		date = row[0]
 		state = row[2]
@@ -40,7 +40,7 @@ def csv_data(data, testing : bool = None):
 		
 		if(state not in stateList):
 			stateList.append(state)
-	data = data[1:]
+	data_old = data_old[1:]
 	for date in csvData:
 
 		dateWriter.append(date)
@@ -53,7 +53,7 @@ def csv_data(data, testing : bool = None):
 			csvData[date][state]["dead"] = 0
 
 
-	for row in data:
+	for row in data_old:
 
 		date = row[0]
 		state = row[2]
@@ -85,7 +85,7 @@ def csv_data(data, testing : bool = None):
 
 	if not testing:
 
-		with open(DIR_DATA + 'APIData/csv_data.csv', 'w') as csvfile:
+		with open(DIR_DATA + 'APIData/csv_history_states_infected.csv', 'w') as csvfile:
 
 			csvwriter = csv.writer(csvfile)  
 			
