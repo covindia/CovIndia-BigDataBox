@@ -25,13 +25,10 @@ limiter = Limiter(
 def home():
 	return "<a href=\"https://covindia.com\">Click here to go to https://covindia.com</a>. You were not supposed to stumble here.<br><br>But now that you did, hello from us!"
 
-@app.route('/history-infected-daily', methods=['GET'])
-def history_infected_daily():
-	data = {}
-	with open(DIR_DATA + "/APIData/history_infected_daily.json", 'r') as FPtr:
-		data = load(FPtr)
-	return jsonify(data)
 
+########################
+####### GENERAL ########
+########################
 @app.route('/general', methods=['GET'])
 def general():
 	data = {}
@@ -46,68 +43,10 @@ def latest_updates():
 		data = load(FPtr)
 	return jsonify(data)
 
-@app.route('/present-district-values', methods=['GET'])
-def present_district_values():
-	data = {}
-	with open(DIR_DATA + "/APIData/present_district_values.json", 'r') as FPtr:
-		data = load(FPtr)
-	return jsonify(data)
-
-@app.route('/present-states-infected', methods=['GET'])
-def present_states_infected():
-	data = {}
-	with open(DIR_DATA + "/APIData/present_states_infected.json", 'r') as FPtr:
-		data = load(FPtr)
-	return jsonify(data)
-
-@app.route('/history-states-infected', methods=['GET'])
-def history_states_infected():
-	data = {}
-	with open(DIR_DATA + "/APIData/history_states_infected.json", 'r') as FPtr:
-		data = load(FPtr)
-	return jsonify(data)
-
-@app.route('/present-states-cases-deaths', methods=['GET'])
-def present_states_cases_deaths():
-	data = {}
-	with open(DIR_DATA + "/APIData/present_states_cases_deaths.json", 'r') as FPtr:
-		data = load(FPtr)
-	return jsonify(data)
-
-@app.route('/history-district-values', methods=['GET'])
-def history_district_values():
-	data = {}
-	with open(DIR_DATA + "/APIData/history_district_values.json", 'r') as FPtr:
-		data = load(FPtr)
-	return jsonify(data)
-
-@app.route('/present-zones', methods=['GET'])
-def present_zones():
-	data = {}
-	with open(DIR_DATA + "/APIData/present_zones.json", 'r') as FPtr:
-		data = load(FPtr)
-	return jsonify(data)
-
-@app.route('/history-twenty-four-hours', methods=['GET'])
-def history_twenty_four_hours():
-	data = {}
-	with open(DIR_DATA + "/APIData/history_twenty_four_hours.json", 'r') as FPtr:
-		data = load(FPtr)
-	return jsonify(data)
-
-@app.route('/history-testing', methods=['GET'])
-def history_testing():
-	data = {}
-	with open(DIR_DATA + "/APIData/history_testing.json", 'r') as FPtr:
-		data = load(FPtr)
-	return jsonify(data)
-
-@app.route('/present-cured-tested-values', methods=['GET'])
-def present_cured_tested_values():
-	data = {}
-	with open(DIR_DATA + "/APIData/present_cured_tested_values.json", 'r') as FPtr:
-		data = load(FPtr)
-	return jsonify(data)
+@app.route('/csv-history-states-infected', methods=['GET'])
+def csv_history_states_infected():
+	return send_file(DIR_DATA + '/APIData/csv_history_states_infected.csv', mimetype='text/csv',
+		attachment_filename='covindia_history_states_infected.csv', as_attachment=True)
 
 @app.route('/table-data', methods=['GET'])
 def table_data():
@@ -126,11 +65,88 @@ def table_data():
 			tDATA[state] = curedDATA[state]
 	return jsonify(tDATA)
 
-@app.route('/csv-history-states-infected', methods=['GET'])
-def plot_csv():
-	return send_file(DIR_DATA + '/APIData/csv_history_states_infected.csv', mimetype='text/csv',
-		attachment_filename='covindia_history_states_infected.csv', as_attachment=True)
 
+########################
+####### HISTORY ########
+########################
+@app.route('/history-infected-daily', methods=['GET'])
+def history_infected_daily():
+	data = {}
+	with open(DIR_DATA + "/APIData/history_infected_daily.json", 'r') as FPtr:
+		data = load(FPtr)
+	return jsonify(data)
+
+@app.route('/history-states-infected', methods=['GET'])
+def history_states_infected():
+	data = {}
+	with open(DIR_DATA + "/APIData/history_states_infected.json", 'r') as FPtr:
+		data = load(FPtr)
+	return jsonify(data)
+
+@app.route('/history-twenty-four-hours', methods=['GET'])
+def history_twenty_four_hours():
+	data = {}
+	with open(DIR_DATA + "/APIData/history_twenty_four_hours.json", 'r') as FPtr:
+		data = load(FPtr)
+	return jsonify(data)
+
+@app.route('/history-testing', methods=['GET'])
+def history_testing():
+	data = {}
+	with open(DIR_DATA + "/APIData/history_testing.json", 'r') as FPtr:
+		data = load(FPtr)
+	return jsonify(data)
+
+@app.route('/history-district-values', methods=['GET'])
+def history_district_values():
+	data = {}
+	with open(DIR_DATA + "/APIData/history_district_values.json", 'r') as FPtr:
+		data = load(FPtr)
+	return jsonify(data)
+
+
+########################
+####### PRESENT ########
+########################
+@app.route('/present-district-values', methods=['GET'])
+def present_district_values():
+	data = {}
+	with open(DIR_DATA + "/APIData/present_district_values.json", 'r') as FPtr:
+		data = load(FPtr)
+	return jsonify(data)
+
+@app.route('/present-states-infected', methods=['GET'])
+def present_states_infected():
+	data = {}
+	with open(DIR_DATA + "/APIData/present_states_infected.json", 'r') as FPtr:
+		data = load(FPtr)
+	return jsonify(data)
+
+@app.route('/present-cured-tested-values', methods=['GET'])
+def present_cured_tested_values():
+	data = {}
+	with open(DIR_DATA + "/APIData/present_cured_tested_values.json", 'r') as FPtr:
+		data = load(FPtr)
+	return jsonify(data)
+
+@app.route('/present-zones', methods=['GET'])
+def present_zones():
+	data = {}
+	with open(DIR_DATA + "/APIData/present_zones.json", 'r') as FPtr:
+		data = load(FPtr)
+	return jsonify(data)
+
+@app.route('/present-states-cases-deaths', methods=['GET'])
+def present_states_cases_deaths():
+	data = {}
+	with open(DIR_DATA + "/APIData/present_states_cases_deaths.json", 'r') as FPtr:
+		data = load(FPtr)
+	return jsonify(data)
+
+
+########################
+######## OTHER #########
+########################
 @app.route('/report-numbers', methods=['GET', 'POST'])
 @limiter.limit("1 per 10 seconds")
 def report_numbers():
