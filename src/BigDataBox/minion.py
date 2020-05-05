@@ -90,10 +90,7 @@ def do_your_work(testing : bool = None):
 	DATA_general = general(data_new, testing)
 
 	print ("Computing latest-updates...")
-	flag, failList = latest_updates_V2(data, 5, testing)
-
-	if flag == -1:
-		FAILLIST.append(i for i in failList)
+	flag, failList = latest_updates_V2(data_new, 5, testing)
 
 	print ("Computing district-values...")
 	flag, failList = district_values(DATA_general, testing)
