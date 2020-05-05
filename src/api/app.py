@@ -34,24 +34,24 @@ def history_infected_daily():
 
 @app.route('/general', methods=['GET'])
 def general():
-	generalJSON = {}
+	data = {}
 	with open(DIR_DATA + "/APIData/index_general.json", 'r') as FPtr:
-		generalJSON = load(FPtr)
-	return jsonify(generalJSON)
+		data = load(FPtr)
+	return jsonify(data)
 
 @app.route('/latest-updates', methods=['GET'])
 def latest_updates():
-	latestUpdatesJSON = {}
+	data = {}
 	with open(DIR_DATA + "/APIData/latest_updates.json", 'r') as FPtr:
-		latestUpdatesJSON = load(FPtr)
-	return jsonify(latestUpdatesJSON)
+		data = load(FPtr)
+	return jsonify(data)
 
-@app.route('/district-values', methods=['GET'])
-def district_values():
-	districtValuesJSON = {}
-	with open(DIR_DATA + "/APIData/district_values.json", 'r') as FPtr:
-		districtValuesJSON = load(FPtr)
-	return jsonify(districtValuesJSON)
+@app.route('/present-district-values', methods=['GET'])
+def present_district_values():
+	data = {}
+	with open(DIR_DATA + "/APIData/present_district_values.json", 'r') as FPtr:
+		data = load(FPtr)
+	return jsonify(data)
 
 @app.route('/states-affected-numbers', methods=['GET'])
 def states_affected_numbers():

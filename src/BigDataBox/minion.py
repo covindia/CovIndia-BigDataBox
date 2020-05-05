@@ -25,7 +25,7 @@ from oauth2client.service_account import ServiceAccountCredentials
 from BigDataBox.utils.website.history.infected_daily import infected_daily
 from BigDataBox.utils.website.latest_updates.latest_updates import latest_updates_V2
 from BigDataBox.utils.website.general.general import general
-from BigDataBox.utils.website.general.district_values import district_values
+from BigDataBox.utils.website.present.district_values import district_values
 from BigDataBox.utils.website.present.states_cases_deaths import states_cases_deaths
 from BigDataBox.utils.website.state_date_total_data.state_date_total_data import state_date_total_data
 from BigDataBox.utils.website.states_affected_numbers.states_affected_numbers import states_affected_numbers
@@ -92,7 +92,7 @@ def do_your_work(testing : bool = None):
 	print ("Computing latest-updates...")
 	flag, failList = latest_updates_V2(data_new, 5, testing)
 
-	print ("Computing district-values...")
+	print ("Computing present-district-values...")
 	flag, failList = district_values(DATA_general, testing)
 
 	if flag == -1:
