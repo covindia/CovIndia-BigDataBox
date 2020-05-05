@@ -87,7 +87,7 @@ def do_your_work(testing : bool = None):
 	flag, failList = states_cases_deaths(data_new, testing)
 
 	print ("Computing general...")
-	DATA_general = general(data, testing)
+	DATA_general = general(data_new, testing)
 
 	print ("Computing latest-updates...")
 	flag, failList = latest_updates_V2(data, 5, testing)

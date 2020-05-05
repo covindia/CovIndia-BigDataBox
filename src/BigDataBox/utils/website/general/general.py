@@ -43,7 +43,7 @@ def inverse_decibel(X, split_number):
 	"""
 	return int(10 ** (X / (10 * split_number)))
 
-def general(data, testing : bool = None):
+def general(data_new, data_cured, testing : bool = None):
 	"""
 		The API function for general.
 
@@ -133,9 +133,6 @@ def general(data, testing : bool = None):
 		except:
 			pass
 
-	districtsAffected = [] # List of districts with infected people
-	statesAffected = [] # List of states with infected people
-
 	# This loop primarily calculates our entries in generalData
 
 	# Calculate the infectedMax and deadMax
@@ -153,48 +150,17 @@ def general(data, testing : bool = None):
 		if DATA_general[district]["dead"] > deadMax:
 			deadMax = DATA_general[district]["dead"]
 
-		# districtsAffected is a list of all districts with infected people
-		if district not in districtsAffected:
-			districtsAffected.append(district)
-
-		# statesAffected is a list of all states with infected people
-		if DATA_general[district]["state"] not in statesAffected:
-			statesAffected.append(DATA_general[district]["state"])
-
 		# Calculating the total infected and dead
 		infectedTotal += DATA_general[district]["infected"]
 		deadTotal += DATA_general[district]["dead"]
 
-	#### BELOW IS VERY VOLATILE CODE. HANDLE WITH CAUTION
-	
-	mohfwURL = "https://www.mohfw.gov.in/" # To get the total cured values
-
-	r = get(mohfwURL)
-
-	soup = bs(r.text, 'html.parser')
-
-	lines = soup.prettify().split("\n")
-
-	lineFlag = False
-
-	# This isn't very pretty, but know that it works and their website is built like this.
-	for lineNumber in range(len(lines)):
-		if "icon-inactive.png" in lines[lineNumber]:
-			if "strong" in lines[lineNumber+1]:
-				if "Cured" in lines[lineNumber+5]:
-					lineFlag = True
-					lineTarget = lines[lineNumber+2]
-					break
-
-	if not lineFlag:
-		raise NameError("cured number in MOHFW wasn't found. :|")
-
-	lineTarget = lineTarget.replace(" ", "")
-	lineTarget = lineTarget.replace("\t", "")
-
-	TotalCured = int(lineTarget)
-
-	### VOLATILE CODE ENDS
+	# Cured Data
+	totalCured = 0
+	for row in data_cured:
+		try:
+			totalCured += int(row[4])
+		except:
+			totalCured += 0
 
 	# Calculate the "value" of each district.
 	# "value" corresponds to the color on the map
@@ -235,14 +201,12 @@ def general(data, testing : bool = None):
 	generalData = {
 		"deadToday" : int(deadToday),
 		"deathTotal" : int(deadTotal),
-		"districtList" : districtsAffected,
 		"infectedTotal" : int(infectedTotal),
 		"infectedMax" : int(infectedMax),
 		"infectedToday" : int(infectedToday),
 		"lastUpdatedTime" : str(datetime.now()),
 		"splitPoints" : [1, X1, X2, int(infectedMax)],
-		"statesList" : statesAffected,
-		"totalCured" : int(TotalCured)
+		"totalCured" : int(totalCured)
 	}
 
 	if not testing:
