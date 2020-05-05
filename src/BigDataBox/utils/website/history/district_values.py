@@ -45,9 +45,9 @@ def inverse_decibel(X, split_number):
 	"""
 	return int(10 ** (X / (10 * split_number)))
 
-def district_date_total_data(original_data, testing : bool = None):
+def district_values(data_new, testing : bool = None):
 	"""
-		The API function for district-date-total-data.
+		The API function for history-district-values.
 
 		This returns a JSON that gives all the data of affected districts on all previous dates.
 
@@ -55,67 +55,66 @@ def district_date_total_data(original_data, testing : bool = None):
 		1 = All good
 		-1 = Something died
 	"""
-	data = original_data[:]
-	DATA_ddtd = OrderedDict()
-	local_ddtd_total = {}
+	DATA_dv = OrderedDict()
+	local_dv_total = {}
 
 	failList = []
 
 	# NOTE: By doing this, I have reduced a O(n^2) algo to a O(n) algo.
 	# NOTE to the reader: Attend your algos classes. They help.
-	for row in data:
+	for row in data_new:
 		Date = datetime.strptime(str(row[0]), "%d/%m/%Y")
 		row.insert(0, Date)
 
 	# However, sorting is still a O(n*log(n)), so overall complexity remains to be O(n*log(n))
-	data.sort()
+	data_new.sort()
 
-	for row in data:
+	for row in data_new:
 		try:
 			district = row[4]
 		except:
-			failList.append("BigDataBox.utils.website.district_date_total_data.district_date_total_data: district. Could not extract district name {" + str(row) + "}" )
+			failList.append("BigDataBox.utils.website.history.district_values: district. Could not extract district name {" + str(row) + "}" )
 			continue
 
 		try:
 			DateUpdated = str(row[1])
 		except:
-			failList.append("BigDataBox.utils.website.district_date_total_data.district_date_total_data: DateUpdated. Could not extract date updated {" + str(row) + "}" )
+			failList.append("BigDataBox.utils.website.history.district_values: DateUpdated. Could not extract date updated {" + str(row) + "}" )
 			continue
 
-		if district not in local_ddtd_total:
-			local_ddtd_total[district] = {}
-			local_ddtd_total[district]["infected"] = 0
-			local_ddtd_total[district]["dead"] = 0
+		if district not in local_dv_total:
+			local_dv_total[district] = {}
+			local_dv_total[district]["infected"] = 0
+			local_dv_total[district]["dead"] = 0
 
-		if DateUpdated not in DATA_ddtd:
-			DATA_ddtd[DateUpdated] = {}
-			for district in local_ddtd_total:
-				DATA_ddtd[DateUpdated][district] = {}
-				DATA_ddtd[DateUpdated][district]["infected"] = local_ddtd_total[district]["infected"]
-				DATA_ddtd[DateUpdated][district]["dead"] = local_ddtd_total[district]["dead"]
+		if DateUpdated not in DATA_dv:
+			DATA_dv[DateUpdated] = {}
+			for district in local_dv_total:
+				DATA_dv[DateUpdated][district] = {}
+				DATA_dv[DateUpdated][district]["infected"] = local_dv_total[district]["infected"]
+				DATA_dv[DateUpdated][district]["dead"] = local_dv_total[district]["dead"]
 
-		if district not in DATA_ddtd[DateUpdated]:
-			DATA_ddtd[DateUpdated][district] = {}
-			DATA_ddtd[DateUpdated][district]["infected"] = 0
-			DATA_ddtd[DateUpdated][district]["dead"] = 0
-
-		try:
-			DATA_ddtd[DateUpdated][district]["infected"] += int(row[5])
-			local_ddtd_total[district]["infected"] += int(row[5])
-		except:
-			DATA_ddtd[DateUpdated][district]["infected"] += 0
-			local_ddtd_total[district]["infected"] += 0
+		if district not in DATA_dv[DateUpdated]:
+			DATA_dv[DateUpdated][district] = {}
+			DATA_dv[DateUpdated][district]["infected"] = 0
+			DATA_dv[DateUpdated][district]["dead"] = 0
 
 		try:
-			DATA_ddtd[DateUpdated][district]["dead"] += int(row[6])
-			local_ddtd_total[district]["dead"] += int(row[6])
+			DATA_dv[DateUpdated][district]["infected"] += int(row[5])
+			local_dv_total[district]["infected"] += int(row[5])
 		except:
-			DATA_ddtd[DateUpdated][district]["dead"] += 0
-			local_ddtd_total[district]["dead"] += 0
+			DATA_dv[DateUpdated][district]["infected"] += 0
+			local_dv_total[district]["infected"] += 0
 
-	for date in DATA_ddtd:
-		# find the max value in DATA_ddtd
+		try:
+			DATA_dv[DateUpdated][district]["dead"] += int(row[6])
+			local_dv_total[district]["dead"] += int(row[6])
+		except:
+			DATA_dv[DateUpdated][district]["dead"] += 0
+			local_dv_total[district]["dead"] += 0
+
+	for date in DATA_dv:
+		# find the max value in DATA_dv
 		maxINF = 0
 		totalINF = 0
 
@@ -128,24 +127,24 @@ def district_date_total_data(original_data, testing : bool = None):
 
 		highestValue = 0
 
-		for district in DATA_ddtd[date]:
+		for district in DATA_dv[date]:
 			# Get total infected & max infected
-			totalINF += DATA_ddtd[date][district]["infected"]
+			totalINF += DATA_dv[date][district]["infected"]
 
-			if DATA_ddtd[date][district]["infected"] > maxINF:
-				maxINF = DATA_ddtd[date][district]["infected"]
+			if DATA_dv[date][district]["infected"] > maxINF:
+				maxINF = DATA_dv[date][district]["infected"]
 
 			# Calculate decibels
-			districtValue = decibel(DATA_ddtd[date][district]["infected"])
+			districtValue = decibel(DATA_dv[date][district]["infected"])
 
 			if districtValue > highestValue:
 				highestValue = districtValue
 
-			DATA_ddtd[date][district]["value"] = districtValue
+			DATA_dv[date][district]["value"] = districtValue
 
 		# Step 2. Make all the values divided by highestValue [To get numbers between 0 & 1]
-		for district in DATA_ddtd[date]:
-			DATA_ddtd[date][district]["value"] = DATA_ddtd[date][district]["value"] / highestValue
+		for district in DATA_dv[date]:
+			DATA_dv[date][district]["value"] = DATA_dv[date][district]["value"] / highestValue
 
 		# Step 3. Calculate the 2 points that correspond to highestValue/3 and 2*highestValue/3
 		#
@@ -158,13 +157,13 @@ def district_date_total_data(original_data, testing : bool = None):
 		X1 = inverse_decibel(1 * highestValue, 3)
 		X2 = inverse_decibel(2 * highestValue, 3)
 
-		DATA_ddtd[date]["total-infected"] = totalINF
-		DATA_ddtd[date]["max-legend-value"] = maxINF
-		DATA_ddtd[date]["splitPoints"] = [1, X1, X2, maxINF]
+		DATA_dv[date]["total-infected"] = totalINF
+		DATA_dv[date]["max-legend-value"] = maxINF
+		DATA_dv[date]["splitPoints"] = [1, X1, X2, maxINF]
 
 	if not testing:
-		with open(DIR_DATA + "APIData/district_date_total_data.json", 'w') as FPtr:
-			dump(DATA_ddtd, FPtr)
+		with open(DIR_DATA + "APIData/history_district_values.json", 'w') as FPtr:
+			dump(DATA_dv, FPtr)
 
 	if len(failList) != 0:
 		return (-1, failList)

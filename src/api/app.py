@@ -74,12 +74,12 @@ def present_states_cases_deaths():
 		data = load(FPtr)
 	return jsonify(data)
 
-@app.route('/district-date-total-data', methods=['GET'])
-def district_date_total_data():
-	ddtdJSON = {}
-	with open(DIR_DATA + "/APIData/district_date_total_data.json", 'r') as FPtr:
-		ddtdJSON = load(FPtr)
-	return jsonify(ddtdJSON)
+@app.route('/history-district-values', methods=['GET'])
+def history_district_values():
+	data = {}
+	with open(DIR_DATA + "/APIData/history_district_values.json", 'r') as FPtr:
+		data = load(FPtr)
+	return jsonify(data)
 
 @app.route('/zone-data', methods=['GET'])
 def zone_data():

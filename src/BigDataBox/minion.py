@@ -29,7 +29,7 @@ from BigDataBox.utils.website.present.district_values import district_values
 from BigDataBox.utils.website.present.states_cases_deaths import states_cases_deaths
 from BigDataBox.utils.website.history.states_infected import states_infected as history_states_infected
 from BigDataBox.utils.website.present.states_infected import states_infected as present_states_infected
-from BigDataBox.utils.website.general.district_date_total_data import district_date_total_data
+from BigDataBox.utils.website.history.districts_values import districts_values
 from BigDataBox.utils.website.zone_data.zone_data import zone_data
 from BigDataBox.utils.website.past_n_days.past_n_days import past_n_days
 from BigDataBox.utils.website.testing_data.testing_data import testing_data
@@ -104,12 +104,9 @@ def do_your_work(testing : bool = None):
 	print("Computing csv-history-states-infected")
 	flag, failList = csv_history_states_infected(data_old, testing)
 
-	if flag == -1:
-		FAILLIST.append(i for i in failList)
-
-	print ("Computing district-date-total-data...")
-	dataCopy = copy.deepcopy(data)
-	flag, failList = district_date_total_data(dataCopy, testing)
+	print ("Computing history-districts-values...")
+	dataCopy = copy.deepcopy(data_new)
+	flag, failList = districts_values(dataCopy, testing)
 
 	print("Computing testing-data")
 	testing_data(testing)
