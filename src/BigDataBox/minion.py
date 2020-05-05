@@ -26,7 +26,7 @@ from BigDataBox.utils.website.history.infected_daily import infected_daily
 from BigDataBox.utils.website.latest_updates.latest_updates import latest_updates_V2
 from BigDataBox.utils.website.general.general import general
 from BigDataBox.utils.website.general.district_values import district_values
-from BigDataBox.utils.website.daily.states_complete import daily_states_complete
+from BigDataBox.utils.website.present.states_cases_deaths import states_cases_deaths
 from BigDataBox.utils.website.state_date_total_data.state_date_total_data import state_date_total_data
 from BigDataBox.utils.website.states_affected_numbers.states_affected_numbers import states_affected_numbers
 from BigDataBox.utils.website.general.district_date_total_data import district_date_total_data
@@ -83,11 +83,8 @@ def do_your_work(testing : bool = None):
 	dataCopy = copy.deepcopy(data_old)
 	flag, failList = infected_daily(dataCopy, testing)
 
-	print ("Computing daily-states-complete...")
-	flag, failList = daily_states_complete(data, testing)
-
-	if flag == -1:
-		FAILLIST.append(i for i in failList)
+	print ("Computing present-states-cases-deaths...")
+	flag, failList = states_cases_deaths(data_new, testing)
 
 	print ("Computing general...")
 	DATA_general = general(data, testing)

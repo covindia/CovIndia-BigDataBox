@@ -27,10 +27,10 @@ def home():
 
 @app.route('/history-infected-daily', methods=['GET'])
 def history_infected_daily():
-	dailyDates = {}
+	data = {}
 	with open(DIR_DATA + "/APIData/history_infected_daily.json", 'r') as FPtr:
-		dailyDates = load(FPtr)
-	return jsonify(dailyDates)
+		data = load(FPtr)
+	return jsonify(data)
 
 @app.route('/general', methods=['GET'])
 def general():
@@ -67,12 +67,12 @@ def state_date_total_data():
 		sdtdJSON = load(FPtr)
 	return jsonify(sdtdJSON)
 
-@app.route('/daily-states-complete', methods=['GET'])
-def daily_states_complete():
-	dscJSON = {}
-	with open(DIR_DATA + "/APIData/daily_states_complete.json", 'r') as FPtr:
-		dscJSON = load(FPtr)
-	return jsonify(dscJSON)
+@app.route('/present-states-cases-deaths', methods=['GET'])
+def present_states_cases_deaths():
+	data = {}
+	with open(DIR_DATA + "/APIData/present_states_cases_deaths.json", 'r') as FPtr:
+		data = load(FPtr)
+	return jsonify(data)
 
 @app.route('/district-date-total-data', methods=['GET'])
 def district_date_total_data():
