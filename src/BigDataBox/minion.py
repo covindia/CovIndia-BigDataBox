@@ -27,8 +27,8 @@ from BigDataBox.utils.website.latest_updates.latest_updates import latest_update
 from BigDataBox.utils.website.general.general import general
 from BigDataBox.utils.website.present.district_values import district_values
 from BigDataBox.utils.website.present.states_cases_deaths import states_cases_deaths
-from BigDataBox.utils.website.history.states_infected import states_infected
-from BigDataBox.utils.website.states_affected_numbers.states_affected_numbers import states_affected_numbers
+from BigDataBox.utils.website.history.states_infected import states_infected as history_states_infected
+from BigDataBox.utils.website.present.states_infected import states_infected as present_states_infected
 from BigDataBox.utils.website.general.district_date_total_data import district_date_total_data
 from BigDataBox.utils.website.zone_data.zone_data import zone_data
 from BigDataBox.utils.website.past_n_days.past_n_days import past_n_days
@@ -96,10 +96,10 @@ def do_your_work(testing : bool = None):
 	flag, failList = district_values(DATA_general, testing)
 
 	print ("Computing history-states-infected...")
-	flag, failList = states_infected(data_old, testing)
+	flag, failList = history_states_infected(data_old, testing)
 
-	print ("Computing states-affected-numbers...")
-	flag, failList = states_affected_numbers(data, testing)
+	print ("Computing present-states-infected...")
+	flag, failList = present_states_infected(data_new, testing)
 
 	if flag == -1:
 		FAILLIST.append(i for i in failList)

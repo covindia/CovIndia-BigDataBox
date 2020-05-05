@@ -53,12 +53,12 @@ def present_district_values():
 		data = load(FPtr)
 	return jsonify(data)
 
-@app.route('/states-affected-numbers', methods=['GET'])
-def states_affected_numbers():
-	sanJSON = {}
-	with open(DIR_DATA + "/APIData/states_affected_numbers.json", 'r') as FPtr:
-		sanJSON = load(FPtr)
-	return jsonify(sanJSON)
+@app.route('/present-states-infected', methods=['GET'])
+def present_states_infected():
+	data = {}
+	with open(DIR_DATA + "/APIData/present_states_infected.json", 'r') as FPtr:
+		data = load(FPtr)
+	return jsonify(data)
 
 @app.route('/history-states-infected', methods=['GET'])
 def history_states_infected():
