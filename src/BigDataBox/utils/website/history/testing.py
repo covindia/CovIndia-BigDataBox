@@ -41,5 +41,8 @@ def testing(data_testing, testing : bool = None):
 		
 		rowNum += 1
 	
-	with open(DIR_DATA + "APIData/history_testing.json", 'w') as FPtr:
-		dump(testingData, FPtr)
+	if not testing:
+		with open(DIR_DATA + "APIData/history_testing.json", 'w') as FPtr:
+			dump(testingData, FPtr)
+
+	return 1
