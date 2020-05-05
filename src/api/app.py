@@ -81,12 +81,12 @@ def history_district_values():
 		data = load(FPtr)
 	return jsonify(data)
 
-@app.route('/zone-data', methods=['GET'])
-def zone_data():
-	zdDATA = {}
-	with open(DIR_DATA + "/APIData/zone_data.json", 'r') as FPtr:
-		zdDATA = load(FPtr)
-	return jsonify(zdDATA)
+@app.route('/present-zones', methods=['GET'])
+def present_zones():
+	data = {}
+	with open(DIR_DATA + "/APIData/present_zones.json", 'r') as FPtr:
+		data = load(FPtr)
+	return jsonify(data)
 
 @app.route('/past-twenty-four-hours', methods=['GET'])
 def past_twenty_four_hours():
@@ -102,28 +102,28 @@ def past_two_weeks():
 		ptwDATA = load(FPtr)
 	return jsonify(ptwDATA)
 
-@app.route('/testing-data', methods=['GET'])
-def testing_data():
-	testingDATA = {}
-	with open(DIR_DATA + "/APIData/testing_data.json", 'r') as FPtr:
-		testingDATA = load(FPtr)
-	return jsonify(testingDATA)
+@app.route('/history-testing', methods=['GET'])
+def history_testing():
+	data = {}
+	with open(DIR_DATA + "/APIData/history_testing.json", 'r') as FPtr:
+		data = load(FPtr)
+	return jsonify(data)
 
-@app.route('/cured-data', methods=['GET'])
-def cured_data():
-	curedDATA = {}
-	with open(DIR_DATA + "/APIData/cured_data.json", 'r') as FPtr:
-		curedDATA = load(FPtr)
-	return jsonify(curedDATA)
+@app.route('/presesnt-cured-tested-values', methods=['GET'])
+def presesnt_cured_tested_values():
+	data = {}
+	with open(DIR_DATA + "/APIData/presesnt_cured_tested_values.json", 'r') as FPtr:
+		data = load(FPtr)
+	return jsonify(data)
 
 @app.route('/table-data', methods=['GET'])
 def table_data():
 	# A mix of daily_states_complete and cured_data
 	tDATA = {}
 	curedDATA = {}
-	with open(DIR_DATA + "/APIData/daily_states_complete.json", 'r') as FPtr:
+	with open(DIR_DATA + "/APIData/present_states_cases_deaths.json", 'r') as FPtr:
 		tDATA = load(FPtr)
-	with open(DIR_DATA + "/APIData/cured_data.json", 'r') as FPtr:
+	with open(DIR_DATA + "/APIData/cured.json", 'r') as FPtr:
 		curedDATA = load(FPtr)
 	for state in curedDATA:
 		try:

@@ -30,10 +30,10 @@ from BigDataBox.utils.website.present.states_cases_deaths import states_cases_de
 from BigDataBox.utils.website.history.states_infected import states_infected as history_states_infected
 from BigDataBox.utils.website.present.states_infected import states_infected as present_states_infected
 from BigDataBox.utils.website.history.districts_values import districts_values
-from BigDataBox.utils.website.zone_data.zone_data import zone_data
+from BigDataBox.utils.website.present.zones import zones as present_zones
 from BigDataBox.utils.website.past_n_days.past_n_days import past_n_days
-from BigDataBox.utils.website.testing_data.testing_data import testing_data
-from BigDataBox.utils.website.cured_data.cured_data import cured_data
+from BigDataBox.utils.website.history.testing import testing as history_testing
+from BigDataBox.utils.website.present.cured_tested_values import cured_tested_values as present_cured_tested_values
 from BigDataBox.utils.website.csv.history.states_infected import states_infected as csv_history_states_infected
 
 # Raw-Data
@@ -108,17 +108,14 @@ def do_your_work(testing : bool = None):
 	dataCopy = copy.deepcopy(data_new)
 	flag, failList = districts_values(dataCopy, testing)
 
-	print("Computing testing-data")
-	testing_data(testing)
+	print("Computing history-testing")
+	history_testing(data_testing, testing)
 
-	print("Computing cured-data")
-	cured_data(testing)
+	print("Computing present-cured-tested-values")
+	present_cured_tested_values(data_cured, testing)
 
-	if flag == -1:
-		FAILLIST.append(i for i in failList)
-
-	print ("Computing zone-data")
-	zone_data(testing)
+	print ("Computing present-zones")
+	present_zones(testing)
 
 	print ("\nPublic:")
 	print ("Computing covindia-raw-data...")
