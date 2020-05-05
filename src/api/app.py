@@ -60,12 +60,12 @@ def states_affected_numbers():
 		sanJSON = load(FPtr)
 	return jsonify(sanJSON)
 
-@app.route('/state-date-total-data', methods=['GET'])
-def state_date_total_data():
-	sdtdJSON = {}
-	with open(DIR_DATA + "/APIData/state_date_total_data.json", 'r') as FPtr:
-		sdtdJSON = load(FPtr)
-	return jsonify(sdtdJSON)
+@app.route('/history-states-infected', methods=['GET'])
+def history_states_infected():
+	data = {}
+	with open(DIR_DATA + "/APIData/history_states_infected.json", 'r') as FPtr:
+		data = load(FPtr)
+	return jsonify(data)
 
 @app.route('/present-states-cases-deaths', methods=['GET'])
 def present_states_cases_deaths():
