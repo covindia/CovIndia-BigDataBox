@@ -22,28 +22,39 @@ from oauth2client.service_account import ServiceAccountCredentials
 # I, Cereal God, urge you to go through their code and see their interests.
 # #SlavesLivesMattersAndSoDoTheirInterests
 
-from BigDataBox.utils.website.history.infected_daily import infected_daily
-from BigDataBox.utils.website.latest_updates.latest_updates import latest_updates_V2
-from BigDataBox.utils.website.general.general import general
-from BigDataBox.utils.website.present.district_values import district_values
-from BigDataBox.utils.website.present.states_cases_deaths import states_cases_deaths
-from BigDataBox.utils.website.history.states_infected import states_infected as history_states_infected
-from BigDataBox.utils.website.present.states_infected import states_infected as present_states_infected
-from BigDataBox.utils.website.history.districts_values import districts_values
-from BigDataBox.utils.website.present.zones import zones as present_zones
-from BigDataBox.utils.website.history.twenty_four_hours import twenty_four_hours as history_twenty_four_hours
 from BigDataBox.utils.website.history.testing import testing as history_testing
+from BigDataBox.utils.website.history.infected_daily import infected_daily as history_infected_daily
+from BigDataBox.utils.website.history.states_infected import states_infected as history_states_infected
+from BigDataBox.utils.website.history.district_values import district_values as history_district_values
+from BigDataBox.utils.website.history.twenty_four_hours import twenty_four_hours as history_twenty_four_hours
+
+from BigDataBox.utils.website.present.zones import zones as present_zones
+from BigDataBox.utils.website.present.states_infected import states_infected as present_states_infected
+from BigDataBox.utils.website.present.district_values import district_values as present_district_values
+from BigDataBox.utils.website.present.states_cases_deaths import states_cases_deaths as present_states_cases_deaths
 from BigDataBox.utils.website.present.cured_tested_values import cured_tested_values as present_cured_tested_values
+
+from BigDataBox.utils.website.general.general import general
+from BigDataBox.utils.website.latest_updates.latest_updates import latest_updates_V2
 from BigDataBox.utils.website.csv.history.states_infected import states_infected as csv_history_states_infected
 
-# Raw-Data
-from BigDataBox.utils.public.covindia.raw_data import raw_data
-# Present-State-Data
-from BigDataBox.utils.public.covindia.state_data import state_data
-# Present-General-Data
-from BigDataBox.utils.public.covindia.general_data import general_data
-# History-District-Data
-from BigDataBox.utils.public.covindia.district_date_data import district_date_data
+
+#####################
+# PUBLIC API IS ON A HOLD UNTIL IT CAN BE FIGURED OUT WHAT TO BE DONE
+#####################
+
+# # Raw-Data
+# from BigDataBox.utils.public.covindia.raw_data import raw_data
+# # Present-State-Data
+# from BigDataBox.utils.public.covindia.state_data import state_data
+# # Present-General-Data
+# from BigDataBox.utils.public.covindia.general_data import general_data
+# # History-District-Data
+# from BigDataBox.utils.public.covindia.district_date_data import district_date_data
+
+#####################
+# PUBLIC API ENDS
+#####################
 
 # Directories
 DIR_DATA = "../data/"
@@ -66,6 +77,7 @@ def do_your_work(testing : bool = None):
 	sheet_cured = client.open_by_url(urls['Cured']).worksheet('Sheet1')
 	sheet_testing = client.open_by_url(urls['Testing']).worksheet('Sheet1')
 
+	print ("Pinging Sheets...")
 	data_old = sheet_old.get()
 	data_new = sheet_new.get()
 	data_cured = sheet_cured.get()
@@ -79,46 +91,52 @@ def do_your_work(testing : bool = None):
 
 	FAILLIST = []
 
-	print ("Computing history-infected-daily...")
-	dataCopy = copy.deepcopy(data_old)
-	flag, failList = infected_daily(dataCopy, testing)
-
-	print ("Computing present-states-cases-deaths...")
-	flag, failList = states_cases_deaths(data_new, testing)
-
+	# OTHERS
 	print ("Computing general...")
-	DATA_general = general(data_new, testing)
+	DATA_general = general(data_new, data_cured, testing)
 
 	print ("Computing latest-updates...")
 	flag, failList = latest_updates_V2(data_new, 5, testing)
 
-	print ("Computing present-district-values...")
-	flag, failList = district_values(DATA_general, testing)
-
-	print ("Computing history-states-infected...")
-	flag, failList = history_states_infected(data_old, testing)
-
-	print ("Computing present-states-infected...")
-	flag, failList = present_states_infected(data_new, testing)
-
-	print("Computing csv-history-states-infected")
+	print("Computing csv-history-states-infected...")
 	flag, failList = csv_history_states_infected(data_old, testing)
 
-	print ("Computing history-districts-values...")
-	dataCopy = copy.deepcopy(data_new)
-	flag, failList = districts_values(dataCopy, testing)
+
+	### HISTORY
+	print("Computing history-testing...")
+	history_testing(data_testing, testing)
 
 	print ("Computing history-twenty-four-hours...")
 	history_twenty_four_hours(data_new, testing)
 
-	print("Computing history-testing...")
-	history_testing(data_testing, testing)
+	print ("Computing history-infected-daily...")
+	dataCopy = copy.deepcopy(data_old)
+	flag, failList = history_infected_daily(dataCopy, testing)
+
+	print ("Computing history-states-infected...")
+	flag, failList = history_states_infected(data_old, testing)
+
+	print ("Computing history-districts-values...")
+	dataCopy = copy.deepcopy(data_new)
+	flag, failList = history_district_values(dataCopy, testing)
+
+
+	### PRESENT
+	print ("Computing present-zones...")
+	present_zones(testing)
 
 	print("Computing present-cured-tested-values...")
 	present_cured_tested_values(data_cured, testing)
 
-	print ("Computing present-zones...")
-	present_zones(testing)
+	print ("Computing present-states-infected...")
+	flag, failList = present_states_infected(data_new, testing)
+
+	print ("Computing present-states-cases-deaths...")
+	flag, failList = present_states_cases_deaths(data_new, testing)
+
+	print ("Computing present-district-values...")
+	flag, failList = present_district_values(DATA_general, testing)
+
 
 	#####################
 	# PUBLIC API IS ON A HOLD UNTIL IT CAN BE FIGURED OUT WHAT TO BE DONE

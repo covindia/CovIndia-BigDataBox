@@ -9,8 +9,9 @@
 	Author: IceCereal
 """
 
-from datetime import datetime
+import copy
 from json import dump
+from datetime import datetime
 from collections import OrderedDict
 
 DIR_DATA = "../data/"
@@ -29,17 +30,21 @@ def infected_daily(data_old_sheet, testing : bool = None):
 
 	dateToday = datetime.today().date()
 
+	data_pruned = []
+
 	# NOTE: By doing this, I have reduced a O(n^2) algo to a O(n) algo.
 	# NOTE to the reader: Attend your algos classes. They help.
 	for row in data_old_sheet:
+		temp_row = copy.deepcopy(row)
 		Date = datetime.strptime(str(row[0]), "%d/%m/%Y")
 		if Date.date() != dateToday:
-			row.insert(0, Date)
+			temp_row.insert(0, Date)
+			data_pruned.append(temp_row)
 
 	# However, sorting is still a O(n*log(n)), so overall complexity remains to be O(n*log(n))
-	data_old_sheet.sort()
+	data_pruned.sort()
 
-	for row in data_old_sheet:
+	for row in data_pruned:
 		date = str(row[1])
 
 		cutoff = datetime(2020, 3, 1)

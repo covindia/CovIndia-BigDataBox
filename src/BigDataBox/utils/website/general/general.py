@@ -64,7 +64,7 @@ def general(data_new, data_cured, testing : bool = None):
 
 	DATA_general = {}
 
-	for row in data:
+	for row in data_new:
 		try:
 			district = row[3]
 		

@@ -72,7 +72,7 @@ def twenty_four_hours(data_new, testing : bool = None):
 		DATA_24_hours[district]["state"] = state # Possible TODO: assert state is the same
 
 	if not testing:
-		with open(DIR_DATA + "APIData/history_twenty_four_hours.json", 'w') as FPtr:
+		with open(DIR_DATA + "/APIData/history_twenty_four_hours.json", 'w') as FPtr:
 			dump(DATA_24_hours, FPtr)
 
 	if len(failList) != 0:
