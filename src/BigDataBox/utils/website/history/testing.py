@@ -4,27 +4,11 @@
 
 from json import dump
 from datetime import datetime
-import gspread
-from oauth2client.service_account import ServiceAccountCredentials
 
 DIR_DATA = "../data/"
 DIR_RES = "res/"
 
-def testing_data(testing : bool = None):
-
-	if(testing):
-		return 1
-
-	scope = ['https://spreadsheets.google.com/feeds']
-	creds = ServiceAccountCredentials.from_json_keyfile_name(DIR_RES + 'creds.json',scope)
-	client = gspread.authorize(creds)
-	with open(DIR_RES + "URL_Testing", 'r') as F:
-				URL = F.read()
-	sheet = client.open_by_url(URL).worksheet('Sheet1')
-
-	data = sheet.get()
-	data = data[1:] # python is soo cool
-	
+def testing(data_testing, testing : bool = None):
 	testingData = {}
 	testingData["date"] = []
 	testingData["tested"] = []
@@ -33,10 +17,10 @@ def testing_data(testing : bool = None):
 
 	rowNum = 0
 
-	for row in data:
+	for row in data_testing:
 
 		try:
-			testingData["date"].append(row[0][:5]) #needed for making fronted's job easier, js is hard, python is cool(again)
+			testingData["date"].append(row[0][:5]) #needed for making frontend's job easier, js is hard, python is cool(again)
 		except:
 			testingData["date"].append("NA")
 
@@ -57,5 +41,8 @@ def testing_data(testing : bool = None):
 		
 		rowNum += 1
 	
-	with open(DIR_DATA + "APIData/testing_data.json", 'w') as FPtr:
-		dump(testingData, FPtr)
+	if not testing:
+		with open(DIR_DATA + "APIData/history_testing.json", 'w') as FPtr:
+			dump(testingData, FPtr)
+
+	return 1

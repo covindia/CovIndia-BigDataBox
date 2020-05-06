@@ -16,7 +16,7 @@ from json import dump, load
 
 DIR_DATA = "../data/"
 
-def latest_updates_V2(data, number_of_latest_updates, testing : bool = None):
+def latest_updates_V2(data_new, number_of_latest_updates, testing : bool = None):
 	"""
 		The API function for latest-updates
 
@@ -31,39 +31,39 @@ def latest_updates_V2(data, number_of_latest_updates, testing : bool = None):
 		1 = All good
 		-1 = Something died
 	"""
-	data.reverse()
+	data_new.reverse()
 	DATA_latest_updates = {}
 
 	failList = []
 
 	count = 0
-	for entry in data:
+	for row in data_new:
 		if (count > number_of_latest_updates-1):
 			break
 
 		# No source -_-, get the source scrapbois. Goddamnit.
 		try:
-			if entry[6] == '' or entry[6] == " ":
-				failList.append("BigDataBox.utils.website.latest_updates.latest_updates: entry[6] (link). Could not extract source (no source given) {" + row + "}" )
+			if row[6] == '' or row[6] == " ":
+				failList.append("BigDataBox.utils.website.latest_updates.latest_updates: row[6] (link). Could not extract source (no source given) {" + row + "}" )
 				continue
 		except:
-			failList.append("BigDataBox.utils.website.latest_updates.latest_updates: entry[6] (link). Could not extract source (error unknown) {" + row + "}" )
+			failList.append("BigDataBox.utils.website.latest_updates.latest_updates: row[6] (link). Could not extract source (error unknown) {" + row + "}" )
 			continue
 
-		state = str(entry[2])
-		district = str(entry[3])
+		state = str(row[2])
+		district = str(row[3])
 
 		infectedNumber = False
 		deathNumber = False
 		display_string = ""
 
 		try:
-			infectedNumber = int(entry[4])
+			infectedNumber = int(row[4])
 		except:
 			pass
 
 		try:
-			deathNumber = int(entry[5])
+			deathNumber = int(row[5])
 		except:
 			pass
 
@@ -79,7 +79,7 @@ def latest_updates_V2(data, number_of_latest_updates, testing : bool = None):
 			if districtFlag:
 				display_string += "<b>" + district + "</b>, "
 			display_string += "<b>" + state + "</b> | Source: "
-			display_string += "<a href=\"" + entry[6] + "\">[Link]</a><br>"
+			display_string += "<a href=\"" + row[6] + "\">[Link]</a><br>"
 		
 		if deathNumber:
 			display_string = "<b>" + str(deathNumber) + "</b> death"
@@ -89,7 +89,7 @@ def latest_updates_V2(data, number_of_latest_updates, testing : bool = None):
 			if districtFlag:
 				display_string += "<b>" + district + "</b>, "
 			display_string += "<b>" + state + "</b> | Source: "
-			display_string += "<a href=\"" + entry[6] + "\">[Link]</a><br>"
+			display_string += "<a href=\"" + row[6] + "\">[Link]</a><br>"
 
 		DATA_latest_updates[str(count)] = display_string
 		count += 1

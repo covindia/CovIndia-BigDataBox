@@ -17,9 +17,9 @@ from datetime import datetime
 
 DIR_DATA = "../data/"
 
-def daily_states_complete(data, testing : bool = None):
+def states_cases_deaths(data, testing : bool = None):
 	"""
-		The API function for daily-states-complete.
+		The API function for present-states-cases-deaths.
 
 		This returns a JSON that gives stats about states today, i.e. number of new cases today vs total number of cases and
 		same with deaths.
@@ -28,7 +28,7 @@ def daily_states_complete(data, testing : bool = None):
 		1 = All good
 		-1 = Something died
 	"""
-	DATA_daily_states_complete = {}
+	DATA_states_cases_deaths = {}
 	baseDate = datetime.combine(datetime.now().date(), datetime.min.time())
 
 	failList = []
@@ -47,7 +47,6 @@ def daily_states_complete(data, testing : bool = None):
 		try:
 			state = str(row[2])
 		except:
-			failList.append("BigDataBox.utils.website.daily.states_complete: state. Could not extract state name {" + row + "}" )
 			continue
 
 		try:
@@ -60,28 +59,27 @@ def daily_states_complete(data, testing : bool = None):
 		except:
 			dead = 0
 
-
 		DateUpdated_Compare = datetime.combine(datetime.strptime(DateUpdated, "%d/%m/%Y"), datetime.strptime(TimeUpdated, "%H:%M").time())
 
-		if state not in DATA_daily_states_complete:
-			DATA_daily_states_complete[state] = {
+		if state not in DATA_states_cases_deaths:
+			DATA_states_cases_deaths[state] = {
 				"TotalCases" : 0,
 				"NewCases" : 0,
 				"TotalDeaths" : 0,
 				"NewDeaths" : 0
 			}
 
-		DATA_daily_states_complete[state]["TotalCases"] += infected
-		DATA_daily_states_complete[state]["TotalDeaths"] += dead
+		DATA_states_cases_deaths[state]["TotalCases"] += infected
+		DATA_states_cases_deaths[state]["TotalDeaths"] += dead
 
 		if DateUpdated_Compare > baseDate:
 			# This is today's data, woop woop
-			DATA_daily_states_complete[state]["NewCases"] += infected
-			DATA_daily_states_complete[state]["NewDeaths"] += dead
+			DATA_states_cases_deaths[state]["NewCases"] += infected
+			DATA_states_cases_deaths[state]["NewDeaths"] += dead
 
 	if not testing:
-		with open(DIR_DATA + "APIData/daily_states_complete.json", 'w') as FPtr:
-			dump(DATA_daily_states_complete, FPtr)
+		with open(DIR_DATA + "APIData/present_states_cases_deaths.json", 'w') as FPtr:
+			dump(DATA_states_cases_deaths, FPtr)
 
 	if len(failList) != 0:
 		return (-1, failList)

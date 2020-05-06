@@ -14,9 +14,9 @@ from json import dump, load
 
 DIR_DATA = "../data/"
 
-def state_date_total_data(data, testing : bool = None):
+def states_infected(data_old, testing : bool = None):
 	"""
-		API function for state-date-total-data.
+		API function for history-states-infected.
 
 		This returns a JSON of dates and the number of infected people in all states for each day.
 
@@ -24,23 +24,29 @@ def state_date_total_data(data, testing : bool = None):
 		1 = All good
 		-1 = Something died
 	"""
-	DATA_sdtd = {}
+	DATA_si = {}
 	states = []
 
 	failList = []
 
-	for row in data:
-		# We need date and state. If I can't get them
+	dateToday = datetime.today().date()
+
+	for row in data_old:
+		# We need date and state.
 		try:
-			DateUpdated = str(row[0])
+			DateUpdated_raw = str(row[0])
 		except:
-			failList.append("BigDataBox.utils.website.state_date_total_data.state_date_total_data: DateUpdated. Could not convert to string.")
+			failList.append("BigDataBox.utils.website.history.states_infected: DateUpdated. Could not convert to string.")
+			continue
+
+		DateUpdated_date = datetime.strptime(DateUpdated_raw, "%d/%m/%Y").date()
+		if DateUpdated_date == dateToday:
 			continue
 
 		try:
 			stateName = str(row[2])
 		except:
-			failList.append("BigDataBox.utils.website.state_date_total_data.state_date_total_data: stateName. Could not convert to string.")
+			failList.append("BigDataBox.utils.website.history.states_infected: stateName. Could not convert to string.")
 			continue
 
 		try:
@@ -49,23 +55,23 @@ def state_date_total_data(data, testing : bool = None):
 			infected = 0
 
 		# We don't have this date recorded, hence we create a new entry
-		if DateUpdated not in DATA_sdtd:
-			DATA_sdtd[DateUpdated] = {}
+		if DateUpdated_raw not in DATA_si:
+			DATA_si[DateUpdated_raw] = {}
 
 			# Copy existing states into this entry
 			for state in states:
-				DATA_sdtd[DateUpdated][state] = 0
+				DATA_si[DateUpdated_raw][state] = 0
 
 		# I legit forgot how this works. It works and that's all that matters.
 		if stateName not in states:
 			states.append(stateName)
-			for dateKey in DATA_sdtd:
-				DATA_sdtd[dateKey][stateName] = 0
-		DATA_sdtd[DateUpdated][stateName] += infected
+			for dateKey in DATA_si:
+				DATA_si[dateKey][stateName] = 0
+		DATA_si[DateUpdated_raw][stateName] += infected
 		
 	if not testing:
-		with open(DIR_DATA + "APIData/state_date_total_data.json", 'w') as FPtr:
-			dump(DATA_sdtd, FPtr)
+		with open(DIR_DATA + "APIData/history_states_infected.json", 'w') as FPtr:
+			dump(DATA_si, FPtr)
 
 	if len(failList) != 0:
 		return (-1, failList)

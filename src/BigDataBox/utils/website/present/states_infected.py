@@ -14,9 +14,9 @@ from json import dump
 
 DIR_DATA = "../data/"
 
-def states_affected_numbers(data, testing : bool = None):
+def states_infected(data_new, testing : bool = None):
 	"""
-		The API function for states-affected-numbers.
+		The API function for present-states-infected.
 
 		This returns a JSON of the tally of number of infections in each state.
 
@@ -27,28 +27,28 @@ def states_affected_numbers(data, testing : bool = None):
 
 	failList = []
 
-	DATA_states_affected_number = {}
-	for row in data:
+	DATA_present_states_infected = {}
+	for row in data_new:
 		try:
 			state = str(row[2])
 		except:
 			print ("extracting state name failed .... {", row, "}")
-			failList.append("BigDataBox.utils.website.state_affected_numbers.state_affected_numbers: stateName. Could not extract state name {" + row + "}" )
+			failList.append("BigDataBox.utils.website.present.states_infected: stateName. Could not extract state name {" + row + "}" )
 			return (-1 ,failList)
 
 		try:
-			DATA_states_affected_number[state] += int(row[4])
-		except Exception as e:
+			DATA_present_states_infected[state] += int(row[4])
+		except:
 			try:
-				DATA_states_affected_number[state] += 0
+				DATA_present_states_infected[state] += 0
 			except:
 				if row[4] == "":
-					DATA_states_affected_number[state] = 0
+					DATA_present_states_infected[state] = 0
 				else:
-					DATA_states_affected_number[state] = int(row[4])
+					DATA_present_states_infected[state] = int(row[4])
 
 	if not testing:
-		with open(DIR_DATA + "APIData/states_affected_numbers.json", 'w') as FPtr:
-			dump(DATA_states_affected_number, FPtr)
+		with open(DIR_DATA + "APIData/present_states_infected.json", 'w') as FPtr:
+			dump(DATA_present_states_infected, FPtr)
 
 	return (1, None)

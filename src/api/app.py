@@ -25,105 +25,37 @@ limiter = Limiter(
 def home():
 	return "<a href=\"https://covindia.com\">Click here to go to https://covindia.com</a>. You were not supposed to stumble here.<br><br>But now that you did, hello from us!"
 
-@app.route('/daily-dates', methods=['GET'])
-def daily_dates():
-	dailyDates = {}
-	with open(DIR_DATA + "/APIData/daily_dates.json", 'r') as FPtr:
-		dailyDates = load(FPtr)
-	return jsonify(dailyDates)
 
+########################
+####### GENERAL ########
+########################
 @app.route('/general', methods=['GET'])
 def general():
-	generalJSON = {}
+	data = {}
 	with open(DIR_DATA + "/APIData/index_general.json", 'r') as FPtr:
-		generalJSON = load(FPtr)
-	return jsonify(generalJSON)
+		data = load(FPtr)
+	return jsonify(data)
 
 @app.route('/latest-updates', methods=['GET'])
 def latest_updates():
-	latestUpdatesJSON = {}
+	data = {}
 	with open(DIR_DATA + "/APIData/latest_updates.json", 'r') as FPtr:
-		latestUpdatesJSON = load(FPtr)
-	return jsonify(latestUpdatesJSON)
+		data = load(FPtr)
+	return jsonify(data)
 
-@app.route('/district-values', methods=['GET'])
-def district_values():
-	districtValuesJSON = {}
-	with open(DIR_DATA + "/APIData/district_values.json", 'r') as FPtr:
-		districtValuesJSON = load(FPtr)
-	return jsonify(districtValuesJSON)
-
-@app.route('/states-affected-numbers', methods=['GET'])
-def states_affected_numbers():
-	sanJSON = {}
-	with open(DIR_DATA + "/APIData/states_affected_numbers.json", 'r') as FPtr:
-		sanJSON = load(FPtr)
-	return jsonify(sanJSON)
-
-@app.route('/state-date-total-data', methods=['GET'])
-def state_date_total_data():
-	sdtdJSON = {}
-	with open(DIR_DATA + "/APIData/state_date_total_data.json", 'r') as FPtr:
-		sdtdJSON = load(FPtr)
-	return jsonify(sdtdJSON)
-
-@app.route('/daily-states-complete', methods=['GET'])
-def daily_states_complete():
-	dscJSON = {}
-	with open(DIR_DATA + "/APIData/daily_states_complete.json", 'r') as FPtr:
-		dscJSON = load(FPtr)
-	return jsonify(dscJSON)
-
-@app.route('/district-date-total-data', methods=['GET'])
-def district_date_total_data():
-	ddtdJSON = {}
-	with open(DIR_DATA + "/APIData/district_date_total_data.json", 'r') as FPtr:
-		ddtdJSON = load(FPtr)
-	return jsonify(ddtdJSON)
-
-@app.route('/zone-data', methods=['GET'])
-def zone_data():
-	zdDATA = {}
-	with open(DIR_DATA + "/APIData/zone_data.json", 'r') as FPtr:
-		zdDATA = load(FPtr)
-	return jsonify(zdDATA)
-
-@app.route('/past-twenty-four-hours', methods=['GET'])
-def past_twenty_four_hours():
-	ptfhDATA = {}
-	with open(DIR_DATA + "/APIData/past_twenty_four_hours.json", 'r') as FPtr:
-		ptfhDATA = load(FPtr)
-	return jsonify(ptfhDATA)
-
-@app.route('/past-two-weeks', methods=['GET'])
-def past_two_weeks():
-	ptwDATA = {}
-	with open(DIR_DATA + "/APIData/past_two_weeks.json", 'r') as FPtr:
-		ptwDATA = load(FPtr)
-	return jsonify(ptwDATA)
-
-@app.route('/testing-data', methods=['GET'])
-def testing_data():
-	testingDATA = {}
-	with open(DIR_DATA + "/APIData/testing_data.json", 'r') as FPtr:
-		testingDATA = load(FPtr)
-	return jsonify(testingDATA)
-
-@app.route('/cured-data', methods=['GET'])
-def cured_data():
-	curedDATA = {}
-	with open(DIR_DATA + "/APIData/cured_data.json", 'r') as FPtr:
-		curedDATA = load(FPtr)
-	return jsonify(curedDATA)
+@app.route('/csv-history-states-infected', methods=['GET'])
+def csv_history_states_infected():
+	return send_file(DIR_DATA + '/APIData/csv_history_states_infected.csv', mimetype='text/csv',
+		attachment_filename='covindia_history_states_infected.csv', as_attachment=True)
 
 @app.route('/table-data', methods=['GET'])
 def table_data():
 	# A mix of daily_states_complete and cured_data
 	tDATA = {}
 	curedDATA = {}
-	with open(DIR_DATA + "/APIData/daily_states_complete.json", 'r') as FPtr:
+	with open(DIR_DATA + "/APIData/present_states_cases_deaths.json", 'r') as FPtr:
 		tDATA = load(FPtr)
-	with open(DIR_DATA + "/APIData/cured_data.json", 'r') as FPtr:
+	with open(DIR_DATA + "/APIData/cured.json", 'r') as FPtr:
 		curedDATA = load(FPtr)
 	for state in curedDATA:
 		try:
@@ -133,10 +65,88 @@ def table_data():
 			tDATA[state] = curedDATA[state]
 	return jsonify(tDATA)
 
-@app.route('/csv-historical-state-data', methods=['GET'])
-def plot_csv():
-	return send_file(DIR_DATA + '/APIData/csv_data.csv', mimetype='text/csv', attachment_filename='csv_data.csv', as_attachment=True)
 
+########################
+####### HISTORY ########
+########################
+@app.route('/history-infected-daily', methods=['GET'])
+def history_infected_daily():
+	data = {}
+	with open(DIR_DATA + "/APIData/history_infected_daily.json", 'r') as FPtr:
+		data = load(FPtr)
+	return jsonify(data)
+
+@app.route('/history-states-infected', methods=['GET'])
+def history_states_infected():
+	data = {}
+	with open(DIR_DATA + "/APIData/history_states_infected.json", 'r') as FPtr:
+		data = load(FPtr)
+	return jsonify(data)
+
+@app.route('/history-twenty-four-hours', methods=['GET'])
+def history_twenty_four_hours():
+	data = {}
+	with open(DIR_DATA + "/APIData/history_twenty_four_hours.json", 'r') as FPtr:
+		data = load(FPtr)
+	return jsonify(data)
+
+@app.route('/history-testing', methods=['GET'])
+def history_testing():
+	data = {}
+	with open(DIR_DATA + "/APIData/history_testing.json", 'r') as FPtr:
+		data = load(FPtr)
+	return jsonify(data)
+
+@app.route('/history-district-values', methods=['GET'])
+def history_district_values():
+	data = {}
+	with open(DIR_DATA + "/APIData/history_district_values.json", 'r') as FPtr:
+		data = load(FPtr)
+	return jsonify(data)
+
+
+########################
+####### PRESENT ########
+########################
+@app.route('/present-district-values', methods=['GET'])
+def present_district_values():
+	data = {}
+	with open(DIR_DATA + "/APIData/present_district_values.json", 'r') as FPtr:
+		data = load(FPtr)
+	return jsonify(data)
+
+@app.route('/present-states-infected', methods=['GET'])
+def present_states_infected():
+	data = {}
+	with open(DIR_DATA + "/APIData/present_states_infected.json", 'r') as FPtr:
+		data = load(FPtr)
+	return jsonify(data)
+
+@app.route('/present-cured-tested-values', methods=['GET'])
+def present_cured_tested_values():
+	data = {}
+	with open(DIR_DATA + "/APIData/present_cured_tested_values.json", 'r') as FPtr:
+		data = load(FPtr)
+	return jsonify(data)
+
+@app.route('/present-zones', methods=['GET'])
+def present_zones():
+	data = {}
+	with open(DIR_DATA + "/APIData/present_zones.json", 'r') as FPtr:
+		data = load(FPtr)
+	return jsonify(data)
+
+@app.route('/present-states-cases-deaths', methods=['GET'])
+def present_states_cases_deaths():
+	data = {}
+	with open(DIR_DATA + "/APIData/present_states_cases_deaths.json", 'r') as FPtr:
+		data = load(FPtr)
+	return jsonify(data)
+
+
+########################
+######## OTHER #########
+########################
 @app.route('/report-numbers', methods=['GET', 'POST'])
 @limiter.limit("1 per 10 seconds")
 def report_numbers():
@@ -208,36 +218,42 @@ def donated():
 
 	return jsonify({"message": "LMAO"})
 
-##### PUBLIC
+#####################
+# PUBLIC API IS ON A HOLD UNTIL IT CAN BE FIGURED OUT WHAT TO BE DONE
+#####################
 
-@app.route('/covindia-history-district-data', methods=['GET'])
-def covindia_district_date_data():
-	cdddJSON = {}
-	with open(DIR_DATA + "/PublicData/covindia_district_date_data.json", 'r') as FPtr:
-		cdddJSON = load(FPtr)
-	return jsonify(cdddJSON)
+# @app.route('/covindia-history-district-data', methods=['GET'])
+# def covindia_district_date_data():
+# 	cdddJSON = {}
+# 	with open(DIR_DATA + "/PublicData/covindia_district_date_data.json", 'r') as FPtr:
+# 		cdddJSON = load(FPtr)
+# 	return jsonify(cdddJSON)
 
-@app.route('/covindia-present-state-data', methods=['GET'])
-def covindia_state_data():
-	csdJSON = {}
-	with open(DIR_DATA + "/PublicData/covindia_state_data.json", 'r') as FPtr:
-		csdJSON = load(FPtr)
-	return jsonify(csdJSON)
+# @app.route('/covindia-present-state-data', methods=['GET'])
+# def covindia_state_data():
+# 	csdJSON = {}
+# 	with open(DIR_DATA + "/PublicData/covindia_state_data.json", 'r') as FPtr:
+# 		csdJSON = load(FPtr)
+# 	return jsonify(csdJSON)
 
-@app.route('/covindia-present-general-data', methods=['GET'])
-def covindia_general_data():
-	cgdJSON = {}
-	with open(DIR_DATA + "/PublicData/covindia_general_data.json", 'r') as FPtr:
-		cgdJSON = load(FPtr)
-	return jsonify(cgdJSON)
+# @app.route('/covindia-present-general-data', methods=['GET'])
+# def covindia_general_data():
+# 	cgdJSON = {}
+# 	with open(DIR_DATA + "/PublicData/covindia_general_data.json", 'r') as FPtr:
+# 		cgdJSON = load(FPtr)
+# 	return jsonify(cgdJSON)
 
-@app.route('/covindia-raw-data', methods=['GET'])
-def covindia_raw_data():
-	crdJSON = {}
-	with open(DIR_DATA + "/PublicData/covindia_raw_data.json", 'r') as FPtr:
-		crdJSON = load(FPtr)
-	return jsonify(crdJSON)
+# @app.route('/covindia-raw-data', methods=['GET'])
+# def covindia_raw_data():
+# 	crdJSON = {}
+# 	with open(DIR_DATA + "/PublicData/covindia_raw_data.json", 'r') as FPtr:
+# 		crdJSON = load(FPtr)
+# 	return jsonify(crdJSON)
 
-@app.route('/covindia-raw-data-csv', methods=['GET'])
-def covindia_raw_data_csv():
-	return send_file(DIR_DATA + '/PublicData/covindia_raw_data_csv.csv', mimetype='text/csv', attachment_filename='covindia_raw_data.csv', as_attachment=True)
+# @app.route('/covindia-raw-data-csv', methods=['GET'])
+# def covindia_raw_data_csv():
+# 	return send_file(DIR_DATA + '/PublicData/covindia_raw_data_csv.csv', mimetype='text/csv', attachment_filename='covindia_raw_data.csv', as_attachment=True)
+
+#####################
+# PUBLIC API ENDS
+#####################
