@@ -70,7 +70,7 @@ def past_days(days : int, output_file : str):
 	out = {}
 	max_infected_db = 10*math.log(df['infected'].max(),10)
 
-	if days != 1:
+	if days > 0:
 		maximum_inf = decibel(df['infected'].max())
 
 		X1 = inverse_decibel(1 * maximum_inf, 3)
@@ -80,8 +80,8 @@ def past_days(days : int, output_file : str):
 
 	for ix in df.index:
 		out[df['district'][ix]] = {}
-		out[df['district'][ix]]['new_infected'] = str(df['infected'][ix])
-		out[df['district'][ix]]['new_deaths'] = str(df['death'][ix])
+		out[df['district'][ix]]['infected'] = str(df['infected'][ix])
+		out[df['district'][ix]]['dead'] = str(df['death'][ix])
 		out[df['district'][ix]]['state'] = str(df['state'][ix])
 		if df['infected'][ix] != 0 :
 			out[df['district'][ix]]['value'] = str((10*math.log(df['infected'][ix],10))/max_infected_db)
